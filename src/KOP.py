@@ -34,7 +34,7 @@ def ClearTabs():
 class Teoria:
     def __init__(self, root):
         self.root = root
-        self.NazovTeorie = {"Ohm","Kapacita","Kirc"}
+        self.NazovTeorie = {"Ohm","Kapacita","Napätie"}
 
        
         frame = tk.Frame(root,relief="groove",bd=5,bg="blue")
@@ -226,20 +226,17 @@ class Calculator:
 
 #-------------------------------------------------------------------------------------
 def RunTeoriaTab():
+    ClearTabs()
     Teoria(root)   
 #-------------------------------------------------------------------------------------    
 def RunCalculator():
+    ClearTabs()
     Calculator(root) 
 #-------------------------------------------------------------------------------------
-TeoriaOpenButton= tk.Button(root,text="Teória",font=("Arial, 14"),bg="lightblue",bd=None,width=int(Cw*1),height=int(Ch*0.25),command=RunTeoriaTab)
+TeoriaOpenButton= tk.Button(root,text="Teória",font=(f"Arial, {int(Cw*0.9)}"),bg="lightblue",bd=None,width=int(Cw*1),height=int(Ch*0.25),command=RunTeoriaTab)
 TeoriaOpenButton.place(x=Cw*30,y=Ch*0.7)
-CalculatorOpenButton = tk.Button(root,text="Kalkulačka",font=("Arial, 14"),bg="lightblue",bd=None,width=int(Cw*1),height=int(Ch*0.25),command=RunCalculator)
+CalculatorOpenButton = tk.Button(root,text="Kalkulačka",font=(f"Arial, {int(Cw*0.9)}"),bg="lightblue",bd=None,width=int(Cw*1),height=int(Ch*0.25),command=RunCalculator)
 CalculatorOpenButton.place(x=Cw*45,y=Ch*0.7)
 ClassTeory = RunTeoriaTab()
 root.mainloop()
 #-------------------------------------------------------------------------------------
-
-ClassTeory = RunTeoriaTab()
-
-
-root.mainloop()
