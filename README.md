@@ -1,1 +1,4 @@
-Ohm.png a Kapacita.png treba dať do súboru s názvom "Teoria", inak som to nevedal nahrať
+# Koncoročná práca
+- **Autor:** Attila Tóth
+- **Trieda:** 4. F
+- **Názov práce:** Elektrotechnická príručka
