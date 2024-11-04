@@ -1,4 +1,10 @@
 import tkinter as tk
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib.pyplot as plt
+from PIL import Image, ImageTk
+import io
+
+
 
 class Calculator:
     def __init__(self, root, clearFunction, openTabs):
@@ -8,10 +14,11 @@ class Calculator:
         self.OpenList = openTabs
         self.NazovOperacie = {"Ohmov zákon","Výkon"}
         
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-        self.Cw = int(screen_width/100)
-        self.Ch = int(screen_height/100)
+        
+        screenWidth = root.winfo_screenwidth()
+        screenHeight = root.winfo_screenheight()
+        self.Cw = int(screenWidth/100)
+        self.Ch = int(screenHeight/100)
 
         frame = tk.Frame(root,relief="groove",bd=5,bg="blue")
         frame.place(x=0,y=self.Ch*10)  
@@ -66,9 +73,25 @@ class Calculator:
 
         
         self.Result = tk.Label(frame, text=f"Výsledok: {self.result} ",font=("Arial, 30"),bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
-        self.Result.place(x=470, y=70)
+        self.Result.place(x=470, y=120)
 
-        self.Info = tk.Label(frame, text=f"Vzorce: R=U/I , U=I⋅R , I=U/R",font=("Arial, 30"),bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
+        formula = r"$U = I \cdot R$         $I = \frac{U}{R}$           $R = \frac{U}{I}$"
+
+        def create_formula_image(formula):
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, formula, fontsize=28,ha='center', va='center')
+            ax.axis('off')
+
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png')
+            plt.close(fig)
+            buf.seek(0)
+
+            img = Image.open(buf)
+            return ImageTk.PhotoImage(img)
+        formulaImage = create_formula_image(formula)
+        
+        self.Info = tk.Label(frame, image=formulaImage,font=("Arial, 30"),bg="DeepSkyBlue4",fg="white",bd=2, relief="solid",width=self.Cw*38,height=self.Ch*10)
         self.Info.place(x=470, y=20)
         
         def Calculate():
@@ -122,9 +145,26 @@ class Calculator:
 
         
         self.Result = tk.Label(frame, text=f"Výsledok: P = {self.result} W",font=("Arial, 30"),bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
-        self.Result.place(x=470, y=70)
+        self.Result.place(x=470, y=120)
 
-        self.Info = tk.Label(frame, text=f"Vzorce: P=U⋅I , P=I^2⋅R , P=U^2/R",font=("Arial, 30"),bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
+        formula = r"$P = I^2 \cdot R$         $P = \frac{U^2}{R}$           $P = I \cdot U$"
+
+        def create_formula_image(formula):
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, formula, fontsize=24,ha='center', va='center')
+            ax.axis('off')
+
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png')
+            plt.close(fig)
+            buf.seek(0)
+
+            img = Image.open(buf)
+            return ImageTk.PhotoImage(img)
+        
+        formulaImage = create_formula_image(formula)
+        
+        self.Info = tk.Label(frame, image=formulaImage,font=("Arial, 30"),bg="DeepSkyBlue4",fg="white",bd=2, relief="solid",width=self.Cw*38,height=self.Ch*10)
         self.Info.place(x=470, y=20)
         
         def Calculate():

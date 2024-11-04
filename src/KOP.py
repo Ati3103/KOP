@@ -8,20 +8,20 @@ root = tk.Tk()
 root.attributes("-fullscreen", True)
 image = tk.PhotoImage(file="background.png")
 #---------------------------------------------------
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+screenWidth = root.winfo_screenwidth()
+screenHeight = root.winfo_screenheight()
 #---------------------------------------------------
-Cw = int(screen_width/100)
-Ch = int(screen_height/100)
+Cw = int(screenWidth/100)
+Ch = int(screenHeight/100)
 #----------------------------------------------------------------------------------------------
-bg_label = tk.Label(root, width=screen_width, height=screen_height, image=image)
-bg_label.pack()
+bgLabel = tk.Label(root, width=screenWidth, height=screenHeight, image=image)
+bgLabel.pack()
 #----------------------------------------------------------------------------------------------------------------------------------------  
-header_label = tk.Label(root, width=screen_width, height=int(Ch * 0.4),bd=5, relief="solid", bg="gold")
-header_label.place(x=0, y=0)
+headerLabel = tk.Label(root, width=screenWidth, height=int(Ch * 0.4),bd=5, relief="solid", bg="gold")
+headerLabel.place(x=0, y=0)
 #----------------------------------------------------------------------------------------------------------------------------------------
-close_button = tk.Button(root, text="X", font=("Arial", 24), fg="white", bg="red",bd=5, relief="solid", width=4, command=root.destroy)
-close_button.place(relx=1.0, rely=0.001, anchor="ne")
+closeButton = tk.Button(root, text="X", font=("Arial", 24), fg="white", bg="red",bd=5, relief="solid", width=4, command=root.destroy)
+closeButton.place(relx=1.0, rely=0.001, anchor="ne")
 #----------------------------------------------------------------------------------------------------------------------------------------
 open_tabs = []
 #-------------------------------
