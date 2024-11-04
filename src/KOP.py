@@ -1,5 +1,4 @@
 import tkinter as tk
-import os
 from tkinter import messagebox
 from TeoriaClass import Teoria
 from CalculatorClass import Calculator

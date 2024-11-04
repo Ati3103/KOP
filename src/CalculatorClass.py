@@ -1,6 +1,4 @@
 import tkinter as tk
-from tkinter import messagebox
-import os
 
 class Calculator:
     def __init__(self, root, clearFunction, openTabs):
