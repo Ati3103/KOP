@@ -1,8 +1,7 @@
 import tkinter as tk
 import os
-from PIL import Image, ImageTk
 from tkinter import messagebox
-
+from TeoriaClass import Teoria
 
 #---------------------------------------------------
 root = tk.Tk()
@@ -31,48 +30,7 @@ def ClearTabs():
         widget.destroy()
 #-------------------------------
 
-class Teoria:
-    def __init__(self, root):
-        self.root = root
-        self.NazovTeorie = {"Ohm","Kapacita","Napätie"}
-
-       
-        frame = tk.Frame(root,relief="groove",bd=5,bg="blue")
-        frame.place(x=0,y=Ch*10)  
-#-------------------------------------------------------------------------------------
-        self.canvas = tk.Canvas(frame, width=Cw*20, height=Ch*80, bg="lightblue")
-        self.canvas.pack(side="left", fill="both", expand=True)
-#-------------------------------------------------------------------------------------
-        self.scrollbar = tk.Scrollbar(frame, orient="vertical", command=self.canvas.yview)
-        self.scrollbar.pack(side="right", fill="y")
-#-------------------------------------------------------------------------------------
-        self.canvas.configure(yscrollcommand=self.scrollbar.set)
-        self.button_frame = tk.Frame(self.canvas)
-        self.canvas.create_window((0, 0), window=self.button_frame, anchor="nw")
-#-------------------------------------------------------------------------------------
-        for i in self.NazovTeorie:
-            button = tk.Button(self.button_frame, text=f"{i}", relief="groove",bd=1, bg="black",fg="white", width=int(Cw*1.82),height=int(Ch*0.2)
-                               ,font=("Arial, 15") ,command=lambda i=i: self.button_action(i))
-            button.pack(pady=2)  
-#-------------------------------------------------------------------------------------
-        self.button_frame.update_idletasks()  # Update frame to get the correct size
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))  # Set scroll region
-#-------------------------------------------------------------------------------------
-    def button_action(self, button_name):
-        ClearTabs()
-        image_path = os.path.join("Teoria", f"{button_name}.png")
-
-        if os.path.exists(image_path):
-           
-            img = tk.PhotoImage(file=image_path)
-         
-            img_label = tk.Label(root, image=img,width=int(Cw*78),height=int(Ch*95),relief="solid")
-            img_label.image = img  
-            img_label.place(x=Cw * 22, y=Ch * 10)  
-            open_tabs.append(img_label)
-        else:
-            messagebox.showerror("Chyba", f"Materiál '{image_path}' sa nenašiel.")
-#-------------------------------------------------------------------------------------        
+     
 class Calculator:
     def __init__(self, root):
         #-------------------------------------------------------------------------------------
@@ -227,7 +185,7 @@ class Calculator:
 #-------------------------------------------------------------------------------------
 def RunTeoriaTab():
     ClearTabs()
-    Teoria(root)   
+    Teoria(root, ClearTabs, open_tabs)   
 #-------------------------------------------------------------------------------------    
 def RunCalculator():
     ClearTabs()
