@@ -1,21 +1,25 @@
 import tkinter as tk
 from tkinter import messagebox
 import tkinter.font as tkFont
-import os
+from PIL import Image, ImageTk
+
 
 class Teoria:
     def __init__(self, root, clearFunction, openTabs):
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.NazovTeorie = {"Ohm","Kapacita","Napätie"}
+        self.NazovTeorie = {"Ohm","Kapacita","Napätie","Prúd","Kirchhoffove Zákony"}
+        
 
         screenWidth = root.winfo_screenwidth()
         screenHeight = root.winfo_screenheight()
-        baseFontSize = int(min(screenWidth, screenHeight) * 0.03)
+        baseFontSize = int(min(screenWidth, screenHeight) * 0.02)
         self.fontSize = tkFont.Font(family="Arial", size=baseFontSize)
         self.Cw = int(screenWidth/100)
         self.Ch = int(screenHeight/100)
+        self.ImageW = int(screenWidth * 0.7)  
+        self.ImageH = int(screenHeight * 0.8)
        
         frame = tk.Frame(root,relief="groove",bd=5,bg="blue")
         frame.place(x=0,rely=0.1)  
@@ -32,24 +36,20 @@ class Teoria:
 #-------------------------------------------------------------------------------------
         for i in self.NazovTeorie:
             button = tk.Button(self.button_frame, text=f"{i}", relief="groove",bd=1, bg="black",fg="white", 
-                               font=self.fontSize ,width=int(self.Cw*0.9),height=int(self.Ch*0.1),command=lambda i=i: self.button_action(i))
+                               font=self.fontSize ,width=int(self.Cw*1),height=int(self.Ch*0.1),command=lambda i=i: self.button_action(i))
             button.pack(pady=2)  
 #-------------------------------------------------------------------------------------
-        self.button_frame.update_idletasks()  # Update frame to get the correct size
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))  # Set scroll region
+        self.button_frame.update_idletasks()  
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))  
 #-------------------------------------------------------------------------------------
     def button_action(self, button_name):
         self.ClearFunction()
-        image_path = os.path.join("Teoria", f"{button_name}.png")
-
-        if os.path.exists(image_path):
-           
-            img = tk.PhotoImage(file=image_path)
-         
-            img_label = tk.Label(self.root, image=img,relief="solid")
-            img_label.image = img  
-            img_label.place(relx=0.25,rely=0.3,relwidth=0.5,relheight=0.7)  
-            self.OpenList.append(img_label)
-        else:
-            messagebox.showerror("Chyba", f"Materiál '{image_path}' sa nenašiel.")
+        imagePath = Image.open(f"Teoria/{button_name}.png")
+        resizedImage = imagePath.resize((self.ImageW, self.ImageH))
+        tkImage = ImageTk.PhotoImage(resizedImage)
+        imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
+        imgLabel.image = tkImage  
+        imgLabel.place(relx=0.23,rely=0.1)  
+        self.OpenList.append(imgLabel)
+       
 #-------------------------------------------------------------------------------------        

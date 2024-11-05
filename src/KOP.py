@@ -37,12 +37,10 @@ def RunCalculator():
     Calculator(root, ClearTabs, open_tabs) 
 #-------------------------------------------------------------------------------------
 TeoriaOpenButton= tk.Button(root,text="Teória",font=fontSize,bg="lightblue",bd=None,command=RunTeoriaTab)
-TeoriaOpenButton.place(relx=0.3, rely=0.005, relwidth=0.08,relheight=0.06)
+TeoriaOpenButton.place(relx=0.3, rely=0.005, relwidth=0.1,relheight=0.06)
 CalculatorOpenButton = tk.Button(root,text="Kalkulačka",font=fontSize,bg="lightblue",bd=None,command=RunCalculator)
-CalculatorOpenButton.place(relx=0.4, rely=0.005, relwidth=0.13,relheight=0.06)
+CalculatorOpenButton.place(relx=0.4, rely=0.005, relwidth=0.15,relheight=0.06)
 ClassTeory = RunTeoriaTab()
 root.mainloop()
 #-------------------------------------------------------------------------------------
 
-#TeoriaOpenButton= tk.Button(root,text="Teória",font=(f"Arial, {int(Cw*0.9)}"),bg="lightblue",bd=None,width=int(Cw*1),height=int(Ch*0.25),command=RunTeoriaTab)
-#TeoriaOpenButton.place(x=Cw*30,y=Ch*0.7)
