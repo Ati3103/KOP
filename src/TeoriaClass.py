@@ -20,6 +20,8 @@ class Teoria:
         self.Ch = int(screenHeight/100)
         self.ImageW = int(screenWidth * 0.7)  
         self.ImageH = int(screenHeight * 0.8)
+        self.GifW = int(screenWidth * 0.2)
+        self.GifH = int(screenHeight * 0.18)
        
         frame = tk.Frame(root,relief="groove",bd=5,bg="blue")
         frame.place(x=0,rely=0.1)  
@@ -51,5 +53,27 @@ class Teoria:
         imgLabel.image = tkImage  
         imgLabel.place(relx=0.23,rely=0.1)  
         self.OpenList.append(imgLabel)
+        
+        gifPath = Image.open(f"GIF/{button_name}.gif")
+        frames = [
+        ImageTk.PhotoImage(gifPath.copy().resize((self.GifW, self.GifH))) 
+        for frame in range(gifPath.n_frames) 
+        if not gifPath.seek(frame)
+        ]
+
+        gifLabel = tk.Label(self.root, image=frames[0], relief="solid")
+        gifLabel.place(relx=0.7, rely=0.3)
+        self.OpenList.append(gifLabel)
+
+        frame_index = 0
+        def update_frame():
+                nonlocal frame_index
+                gifLabel.config(image=frames[frame_index])
+                frame_index = (frame_index + 1) % len(frames)
+                self.root.after(100, update_frame)
+
+        update_frame()
+        
+
        
 #-------------------------------------------------------------------------------------        
