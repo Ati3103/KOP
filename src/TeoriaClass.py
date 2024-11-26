@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import messagebox
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
 
@@ -65,14 +64,14 @@ class Teoria:
         gifLabel.place(relx=0.7, rely=0.3)
         self.OpenList.append(gifLabel)
 
-        frame_index = 0
-        def update_frame():
-                nonlocal frame_index
-                gifLabel.config(image=frames[frame_index])
-                frame_index = (frame_index + 1) % len(frames)
-                self.root.after(100, update_frame)
+        frameIndex = 0
+        def updateFrame():
+                nonlocal frameIndex
+                gifLabel.config(image=frames[frameIndex])
+                frameIndex = (frameIndex + 1) % len(frames)
+                self.root.after(100, updateFrame)
 
-        update_frame()
+        updateFrame()
         
 
        

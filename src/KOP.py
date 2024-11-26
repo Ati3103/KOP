@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 from TeoriaClass import Teoria
 from CalculatorClass import Calculator
-
+from SimulatorClass import VisualCircuitSimulator
 #---------------------------------------------------
 root = tk.Tk()
 root.attributes("-fullscreen", True)
@@ -35,12 +35,18 @@ def RunTeoriaTab():
 def RunCalculator():
     ClearTabs()
     Calculator(root, ClearTabs, open_tabs) 
+#-------------------------------------------------------------------------------------  
+def RunSimulation():
+    ClearTabs()
+    VisualCircuitSimulator(root, ClearTabs, open_tabs) 
 #-------------------------------------------------------------------------------------
 TeoriaOpenButton= tk.Button(root,text="Teória",font=fontSize,bg="lightblue",bd=None,command=RunTeoriaTab)
-TeoriaOpenButton.place(relx=0.3, rely=0.005, relwidth=0.1,relheight=0.06)
+TeoriaOpenButton.place(relx=0.25, rely=0.005, relwidth=0.1,relheight=0.06)
 CalculatorOpenButton = tk.Button(root,text="Kalkulačka",font=fontSize,bg="lightblue",bd=None,command=RunCalculator)
-CalculatorOpenButton.place(relx=0.4, rely=0.005, relwidth=0.15,relheight=0.06)
-ClassTeory = RunTeoriaTab()
+CalculatorOpenButton.place(relx=0.35, rely=0.005, relwidth=0.18,relheight=0.06)
+SimulatorOpenButton = tk.Button(root,text="Simulácie obvodov",font=fontSize,bg="lightblue",bd=None,command=RunSimulation)
+SimulatorOpenButton.place(relx=0.53, rely=0.005, relwidth=0.27,relheight=0.06)
+ClassTeory = RunSimulation()
 root.mainloop()
 #-------------------------------------------------------------------------------------
 
