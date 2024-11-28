@@ -6,7 +6,7 @@ class VisualCircuitSimulator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.NazovTeorie = {"Vypínač","ASdsadsadsadsadsad"}
+        self.CircuitName = ["Vypínač","ASdsadsadsadsadsad"]
 
         screenWidth = root.winfo_screenwidth()
         screenHeight = root.winfo_screenheight()
@@ -30,7 +30,7 @@ class VisualCircuitSimulator:
         scrollCanvas.configure(yscrollcommand=scrollbar.set)
         self.buttonContainer.bind("<Configure>", lambda event: scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all")))
 #-------------------------------------------------------------------------------------
-        for circuitName in self.NazovTeorie:
+        for circuitName in self.CircuitName:
             button = tk.Button(
                 self.buttonContainer,
                 width=int(self.Cw*1.2),

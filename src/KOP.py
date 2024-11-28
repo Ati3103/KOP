@@ -46,7 +46,7 @@ CalculatorOpenButton = tk.Button(root,text="Kalkulačka",font=fontSize,bg="light
 CalculatorOpenButton.place(relx=0.35, rely=0.005, relwidth=0.18,relheight=0.06)
 SimulatorOpenButton = tk.Button(root,text="Simulácie obvodov",font=fontSize,bg="lightblue",bd=None,command=RunSimulation)
 SimulatorOpenButton.place(relx=0.53, rely=0.005, relwidth=0.27,relheight=0.06)
-ClassTeory = RunSimulation()
+ClassTeory = RunTeoriaTab()
 root.mainloop()
 #-------------------------------------------------------------------------------------
 

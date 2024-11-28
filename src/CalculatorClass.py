@@ -13,41 +13,47 @@ class Calculator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.NazovOperacie = {"Ohmov zákon","Výkon"}
+        self.OperationName = ["Ohmov zákon","Výkon"]
         
         
         screenWidth = root.winfo_screenwidth()
         screenHeight = root.winfo_screenheight()
-        self.baseFontSize = int(min(screenWidth, screenHeight) * 0.03)
+        self.baseFontSize = int(min(screenWidth, screenHeight) * 0.02)
         self.fontSize = tkFont.Font(family="Arial", size=self.baseFontSize)
         self.Cw = int(screenWidth/100)
         self.Ch = int(screenHeight/100)
+#-------------------------------------------------------------------------------------
+        panelFrame = tk.Frame(self.root, relief="groove", bd=5, bg="blue")
+        panelFrame.place(x=0, rely=0.1, relwidth=0.2, relheight=0.9)  
 
-        frame = tk.Frame(root,relief="groove",bd=5,bg="blue")
-        frame.place(x=0,rely=0.1)  
- 
-        self.canvas = tk.Canvas(frame, width=self.Cw*20, height=self.Ch*80, bg="lightblue")
-        self.canvas.pack(side="left", fill="both", expand=True)
-   
-        self.scrollbar = tk.Scrollbar(frame, orient="vertical", command=self.canvas.yview)
-        self.scrollbar.pack(side="right", fill="y")
- 
-        self.canvas.configure(yscrollcommand=self.scrollbar.set)
-    
-        self.button_frame = tk.Frame(self.canvas)
-      
-        self.canvas.create_window((0, 0), window=self.button_frame, anchor="nw")
-        #-------------------------------------------------------------------------------------
-        for i in self.NazovOperacie:
-            button = tk.Button(self.button_frame, text=f"{i}", relief="groove",bd=1, bg="black",fg="white", width=int(self.Cw*0.9),height=int(self.Ch*0.1)
-                               ,font=self.fontSize ,command=lambda i=i: self.button_action(i))
-            button.pack(pady=2)  
+        scrollCanvas = tk.Canvas(panelFrame, bg="blue")
+        scrollCanvas.pack(side="left", fill="both", expand=True)
 
-        self.button_frame.update_idletasks()  
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))  
-        #-------------------------------------------------------------------------------------
+        scrollbar = tk.Scrollbar(panelFrame, orient="vertical", command=scrollCanvas.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        self.buttonContainer = tk.Frame(scrollCanvas, bg="blue")
+        scrollCanvas.create_window((0, 0), window=self.buttonContainer, anchor="nw")
+
+        scrollCanvas.configure(yscrollcommand=scrollbar.set)
+        self.buttonContainer.bind("<Configure>", lambda event: scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all")))
+#-------------------------------------------------------------------------------------
+        for Formula in self.OperationName:
+            button = tk.Button(
+                self.buttonContainer,
+                width=int(self.Cw * 1.2),
+                text=f"{Formula}",
+                relief="groove",
+                bd=1,
+                bg="black",
+                fg="white",
+                font=self.fontSize,
+                command=lambda Formula=Formula: self.buttonAction(Formula)  
+            )
+            button.pack(pady=5, padx=3, anchor="w")
+#-------------------------------------------------------------------------------------
         
-    def button_action(self, button_name):
+    def buttonAction(self, button_name):
        if button_name == "Ohmov zákon":
             self.CalculateOhmsLaw() 
        elif button_name == "Výkon":
@@ -80,7 +86,7 @@ class Calculator:
 
         formula = r"$U = I \cdot R$         $I = \frac{U}{R}$           $R = \frac{U}{I}$"
 
-        def create_formula_image(formula):
+        def createFormulaImage(formula):
             fig, ax = plt.subplots()
             ax.text(0.5, 0.5, formula, fontsize=self.baseFontSize/1.5,ha='center', va='center')
             ax.axis('off')
@@ -92,7 +98,7 @@ class Calculator:
 
             img = Image.open(buf)
             return ImageTk.PhotoImage(img)
-        formulaImage = create_formula_image(formula)
+        formulaImage = createFormulaImage(formula)
         
         self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
         self.Info.place(x=0, y=435,relwidth=1,relheight=0.3)
