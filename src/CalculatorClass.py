@@ -9,7 +9,7 @@ import io
 
 class Calculator:
     def __init__(self, root, clearFunction, openTabs):
-        #-------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
