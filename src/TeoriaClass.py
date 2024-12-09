@@ -8,7 +8,7 @@ class Teoria:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.ThemeName = ["Napätie","Prúd","Ohm","Kapacita","Kirchhoffove Zákony"]
+        self.ThemeName = ["Napätie","Prúd","Odpor","Kapacita","Induktivita","Ohmov zákon","Kirchhoffove Zákony","Vodiče"]
         
 
         screenWidth = root.winfo_screenwidth()
@@ -62,7 +62,7 @@ class Teoria:
         self.OpenList.append(imgLabel)
         
         try:
-               
+            try:
                 gifPath = Image.open(f"GIF/{button_name}.gif")
                 frames = [
                 ImageTk.PhotoImage(gifPath.copy().resize((self.GifW, self.GifH))) 
@@ -82,7 +82,14 @@ class Teoria:
                         self.root.after(100, updateFrame)
 
                 updateFrame()
-               
+            except:
+                imagePath = Image.open(f"GIF/{button_name}.png")
+                resizedImage = imagePath.resize((self.GifW, self.GifH))
+                tkImage = ImageTk.PhotoImage(resizedImage)
+                imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
+                imgLabel.image = tkImage  
+                imgLabel.place(relx=0.7, rely=0.3)  
+                self.OpenList.append(imgLabel)
         except (FileNotFoundError, ValueError):
             print("GIF not found or invalid.")
 
