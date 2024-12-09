@@ -4,6 +4,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 import io
+import math
 
 
 
@@ -13,15 +14,15 @@ class Calculator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča"]
+        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky"]
         
         
         screenWidth = root.winfo_screenwidth()
         screenHeight = root.winfo_screenheight()
         self.baseFontSize = int(min(screenWidth, screenHeight) * 0.02)
         self.fontSize = tkFont.Font(family="Arial", size=self.baseFontSize)
-        self.valueFontSize = int(min(screenWidth, screenHeight) * 0.025)
-        self.valueFontSize = tkFont.Font(family="Arial", size=self.valueFontSize)
+        self.valueBaseFontSize = int(min(screenWidth, screenHeight) * 0.025)
+        self.valueFontSize = tkFont.Font(family="Arial", size=self.valueBaseFontSize)
         self.Cw = int(screenWidth/100)
         self.Ch = int(screenHeight/100)
 #-------------------------------------------------------------------------------------
@@ -56,12 +57,16 @@ class Calculator:
 #-------------------------------------------------------------------------------------
         
     def buttonAction(self, button_name):
-       if button_name == "Ohmov zákon":
-            self.CalculateOhmsLaw() 
-       elif button_name == "Výkon":
-            self.CalculatePower()
-       elif button_name == "Odpor vodiča":
-            self.CalculateWireResistance()                
+        if button_name == "Ohmov zákon":
+                self.CalculateOhmsLaw() 
+        elif button_name == "Výkon":
+                self.CalculatePower()
+        elif button_name == "Odpor vodiča":
+                self.CalculateWireResistance() 
+        elif button_name == "Indukčnosť Cievky":
+                self.CalculateInduction()   
+        elif button_name == "Kapacita":
+            self.CalculateCapacity()    
 #-------------------------------------------------------------------------------------    
     def CalculateOhmsLaw(self):
         self.ClearFunction()
@@ -92,7 +97,8 @@ class Calculator:
 
         def createFormulaImage(formula):
             fig, ax = plt.subplots()
-            ax.text(0.5, 0.5, formula, fontsize=self.baseFontSize/1.5,ha='center', va='center')
+            
+            ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize,ha='center', va='center')
             ax.axis('off')
 
             buf = io.BytesIO()
@@ -105,7 +111,7 @@ class Calculator:
         formulaImage = createFormulaImage(formula)
         
         self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
-        self.Info.place(x=0, y=435,relwidth=1,relheight=0.3)
+        self.Info.place(x=0, rely=0.6,relwidth=1,relheight=0.3)
         
         def Calculate():
             R = self.entryR.get()
@@ -164,7 +170,7 @@ class Calculator:
 
             def create_formula_image(formula):
                 fig, ax = plt.subplots()
-                ax.text(0.5, 0.5, formula, fontsize=self.baseFontSize/1.5,ha='center', va='center')
+                ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize,ha='center', va='center')
                 ax.axis('off')
 
                 buf = io.BytesIO()
@@ -178,7 +184,7 @@ class Calculator:
             formulaImage = create_formula_image(formula)
             
             self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
-            self.Info.place(x=0, y=435,relwidth=1,relheight=0.3)
+            self.Info.place(x=0, rely=0.6,relwidth=1,relheight=0.3)
             
             def Calculate():
                 R = self.entryR.get()
@@ -244,7 +250,7 @@ class Calculator:
 
             def create_formula_image(formula):
                 fig, ax = plt.subplots()
-                ax.text(0.5, 0.5, formula, fontsize=self.baseFontSize/1.5,ha='center', va='center')
+                ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize,ha='center', va='center')
                 ax.axis('off')
 
                 buf = io.BytesIO()
@@ -258,7 +264,7 @@ class Calculator:
             formulaImage = create_formula_image(formula)
             
             self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
-            self.Info.place(x=0, y=435,relwidth=1,relheight=0.3)
+            self.Info.place(x=0, rely=0.6,relwidth=1,relheight=0.3)
             
             def Calculate():
                 l = self.entryl.get()
@@ -298,3 +304,162 @@ class Calculator:
             self.StartButton = tk.Button(frame, text="Vypočítať",font=self.fontSize,bd=2, relief="solid", command=Calculate)
             self.StartButton.place(relx=0.33,rely=0.4,relwidth=0.3,relheight=0.1)
     #-------------------------------------------------------------------------------------    
+    def CalculateInduction(self):
+            self.ClearFunction()
+            self.result = 0
+            frame = tk.Frame(self.root, width=int(self.Cw*70), height=int(self.Ch*25),bg="DeepSkyBlue4",bd=5, relief="solid")
+            frame.place(relx=0.3,rely=0.1,relwidth=0.5,relheight=0.8)
+            self.OpenList.append(frame)
+           
+            self.entryN = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryN.place(relx=0.25,rely=0.01)
+            self.entryl = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryl.place(relx=0.25,rely=0.08)
+            self.entryA = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryA.place(relx=0.25,rely=0.15)
+            self.entryμr = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryμr.place(relx=0.25, rely=0.22)
+            
+            self.labelN = tk.Label(frame,text="N [z]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+            self.labelN.place(relx=0.07,rely=0.01)
+            self.labell = tk.Label(frame,text="l [m]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+            self.labell.place(relx=0.07,rely=0.08)
+            self.labelA = tk.Label(frame,text="A [mm2]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+            self.labelA.place(relx=0.07,rely=0.15)
+            self.labelμr = tk.Label(frame,text="μr ",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+            self.labelμr.place(relx=0.07,rely=0.22)
+            
+    
+            self.Result = tk.Label(frame, text=f"Výsledok: L = {self.result} H",font=self.fontSize,bg="DeepSkyBlue4",fg="white")
+            self.Result.place(relx=0.13,rely=0.3,relwidth=0.7,relheight=0.15)
+
+            formula = r"$L = μ\cdot \frac{N^2\cdot A}{l}$"
+
+            def create_formula_image(formula):
+                fig, ax = plt.subplots()
+                ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize,ha='center', va='center')
+                ax.axis('off')
+
+                buf = io.BytesIO()
+                fig.savefig(buf, format='png')
+                plt.close(fig)
+                buf.seek(0)
+
+                img = Image.open(buf)
+                return ImageTk.PhotoImage(img)
+            
+            formulaImage = create_formula_image(formula)
+            
+            self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
+            self.Info.place(x=0, rely=0.6,relwidth=1,relheight=0.3)
+            
+            def Calculate():
+                N = self.entryN.get()
+                l = self.entryl.get()
+                A = self.entryA.get()
+                μr = self.entryμr.get()
+
+                try:
+                    
+                    N = int(N) if N else None  
+                    A = float(A) if A else None  
+                    l = float(l) if l else None  
+                    μr = float(μr) if μr else None 
+                    
+                   
+                    μ0 = 4 * math.pi * 1e-7  
+
+                    if μr is not None:
+                        μ0 = μ0 * μr
+                    else:
+                        μ0 = None  
+
+                   
+                    if N is not None and A is not None and l is not None and μ0 is not None:
+                        
+                        A_m2 = A * 1e-6  
+                        inductance = μ0 * (N**2) * (A_m2 / l)
+                        self.result = f"{inductance:.6e} H"  
+                    else:
+                        self.result = "Nevhodné hodnoty"
+                except ValueError:
+                        self.result = "Nevhodné hodnoty"
+            
+                self.Result.config(text=f"Výsledok: {self.result}",bg="DeepSkyBlue4",fg="white")
+
+            
+            self.StartButton = tk.Button(frame, text="Vypočítať",font=self.fontSize,bd=2, relief="solid", command=Calculate)
+            self.StartButton.place(relx=0.33,rely=0.45,relwidth=0.3,relheight=0.1)
+    #-------------------------------------------------------------------------------------    
+    def CalculateCapacity(self):
+        self.ClearFunction()
+        self.result = 0
+        frame = tk.Frame(self.root,bg="DeepSkyBlue4",bd=5, relief="solid")
+        frame.place(relx=0.3,rely=0.1,relwidth=0.5,relheight=0.8)
+        self.OpenList.append(frame)
+      
+        self.entryC = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryC.place(relx=0.25,rely=0.01)
+        self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryU.place(relx=0.25,rely=0.08)
+        self.entryQ = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryQ.place(relx=0.25,rely=0.15)
+        
+        self.labelC = tk.Label(frame,text="C [F]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+        self.labelC.place(relx=0.07,rely=0.01)
+        self.labelU = tk.Label(frame,text="U [V]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+        self.labelU.place(relx=0.07,rely=0.08)
+        self.labelQ = tk.Label(frame,text="Q  [C]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
+        self.labelQ.place(relx=0.07,rely=0.15)
+
+        
+        self.Result = tk.Label(frame, text=f"Výsledok: {self.result} ",font=self.fontSize,bg="DeepSkyBlue4",fg="white")
+        self.Result.place(relx=0.13,rely=0.25,relwidth=0.7,relheight=0.15)
+
+        formula = r"$C = \frac{Q}{U}$           $U = \frac{Q}{C}$          $Q = C \cdot U$"
+
+        def createFormulaImage(formula):
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize,ha='center', va='center')
+            ax.axis('off')
+
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png')
+            plt.close(fig)
+            buf.seek(0)
+
+            img = Image.open(buf)
+            return ImageTk.PhotoImage(img)
+        formulaImage = createFormulaImage(formula)
+        
+        self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
+        self.Info.place(x=0, rely=0.6,relwidth=1,relheight=0.3)
+        
+        def Calculate():
+            C = self.entryC.get()
+            U = self.entryU.get()
+            Q = self.entryQ.get()
+
+            try:
+                C = float(C) if C else None
+                U = float(U) if U else None
+                Q = float(Q) if Q else None
+
+                if C is None and U is not None and Q is not None:
+                    self.result = (f"{Q / U} F")
+                elif U is None and C is not None and Q is not None:
+                    self.result = (f"{Q / C} V")
+                elif Q is None and C is not None and U is not None:
+                    self.result = (f"{U * C} C")
+                else:
+                    self.result = "Nevhodné hodnoty"
+            except ValueError:
+                self.result = "Nevhodné hodnoty"
+
+           
+            self.Result.config(text=f"Výsledok: {self.result}",bg="DeepSkyBlue4",fg="white")
+
+        
+        self.StartButton = tk.Button(frame, text="Vypočítať",font=self.fontSize,bd=2, relief="solid", command=Calculate)
+        self.StartButton.place(relx=0.33,rely=0.4,relwidth=0.3,relheight=0.1)
+#-------------------------------------------------------------------------------------   
