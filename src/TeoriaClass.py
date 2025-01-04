@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
+from SimulatorClass import VisualCircuitSimulator
 
 
 class Teoria:
@@ -9,6 +10,8 @@ class Teoria:
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
         self.ThemeName = ["Napätie","Prúd","Odpor","Kapacita","Induktivita","Ohmov zákon","Kirchhoffove Zákony","Vodiče"]
+        self.ThemeWithSimulation = ["Prúd", "Kirchhoffove Zákony"]
+        self.CurrentTheme = 0
         
 
         screenWidth = root.winfo_screenwidth()
@@ -21,7 +24,9 @@ class Teoria:
         self.ImageH = int(screenHeight * 0.8)
         self.GifW = int(screenWidth * 0.2)
         self.GifH = int(screenHeight * 0.18)
-#-------------------------------------------------------------------------------------       
+#-------------------------------------------------------------------------------------
+
+       
         panelFrame = tk.Frame(self.root, relief="groove", bd=5, bg="blue")
         panelFrame.place(x=0, rely=0.1, relwidth=0.2, relheight=0.9)  
 
@@ -36,34 +41,68 @@ class Teoria:
 
         scrollCanvas.configure(yscrollcommand=scrollbar.set)
         self.buttonContainer.bind("<Configure>", lambda event: scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all")))
+        
+        nextButton = tk.Button(self.root, text="Ďalej ↓",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(1),self.showSimulation(0)))
+        nextButton.place(relx=0.925, rely = 0.55, relwidth=0.07, relheight=0.04)
+        previousButton = tk.Button(self.root, text="Naspäť ↑",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(0),self.showSimulation(0)))
+        previousButton.place(relx=0.925, rely = 0.5, relwidth=0.07, relheight=0.04)
+        self.showSimulationButton = tk.Button(self.root, text="Simulácia", font=self.fontSize, bg= "white", border=5, command=lambda:self.showSimulation(1))
+        
 #-------------------------------------------------------------------------------------
-        for Tema in self.ThemeName:
+        for Theme in self.ThemeName:
             button = tk.Button(
                 self.buttonContainer,
                 width=int(self.Cw * 1.2),
-                text=f"{Tema}",
+                text=f"{Theme}",
                 relief="groove",
                 bd=1,
                 bg="black",
                 fg="white",
                 font=self.fontSize,
-                command=lambda Tema=Tema: self.buttonAction(Tema)  
+                command=lambda Tema=Theme: self.buttonAction(Tema)  
             )
             button.pack(pady=5, padx=3, anchor="w")
 #-------------------------------------------------------------------------------------
-    def buttonAction(self, button_name):
+    def NextPrevious(self, state):
+        if state == 1:
+            try:
+                self.buttonAction(self.ThemeName[self.CurrentTheme + 1])
+            except:
+                raise ValueError    
+        if state == 0:
+            try:
+                self.buttonAction(self.ThemeName[self.CurrentTheme - 1])
+            except:
+                raise ValueError
+        
+    def showSimulation(self, state):
+        if state == 0:  
+            if self.ThemeName[self.CurrentTheme] in self.ThemeWithSimulation:
+               
+                self.showSimulationButton.place(relx=0.925, rely=0.45, relwidth=0.07, relheight=0.04)
+            else:
+                
+                self.showSimulationButton.place_forget()
+        if state == 1:
+            self.ClearFunction()
+            VisualCircuitSimulator(self.root, self.ClearFunction, self.OpenList, self.CurrentTheme)
+       
+    
+    def buttonAction(self, buttonName):
+        self.CurrentTheme = self.ThemeName.index(buttonName)
         self.ClearFunction()
-        imagePath = Image.open(f"Teoria/{button_name}.png")
+        self.showSimulation(0)
+        imagePath = Image.open(f"Teoria/{buttonName}.png")
         resizedImage = imagePath.resize((self.ImageW, self.ImageH))
         tkImage = ImageTk.PhotoImage(resizedImage)
         imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
         imgLabel.image = tkImage  
-        imgLabel.place(relx=0.23,rely=0.1)  
+        imgLabel.place(relx=0.22,rely=0.1)  
         self.OpenList.append(imgLabel)
         
         try:
             try:
-                gifPath = Image.open(f"GIF/{button_name}.gif")
+                gifPath = Image.open(f"GIF/{buttonName}.gif")
                 frames = [
                 ImageTk.PhotoImage(gifPath.copy().resize((self.GifW, self.GifH))) 
                 for frame in range(gifPath.n_frames) 
@@ -83,7 +122,7 @@ class Teoria:
 
                 updateFrame()
             except:
-                imagePath = Image.open(f"GIF/{button_name}.png")
+                imagePath = Image.open(f"GIF/{buttonName}.png")
                 resizedImage = imagePath.resize((self.GifW, self.GifH))
                 tkImage = ImageTk.PhotoImage(resizedImage)
                 imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
