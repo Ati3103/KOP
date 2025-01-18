@@ -14,7 +14,7 @@ class Calculator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky"]
+        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky","c","c","c","c","c","c","c","c","c","c","c","c","c"]
         
         
         screenWidth = root.winfo_screenwidth()
@@ -26,20 +26,36 @@ class Calculator:
         self.Cw = int(screenWidth/100)
         self.Ch = int(screenHeight/100)
 #-------------------------------------------------------------------------------------
+        # Panel na tlačidlá s témami
         panelFrame = tk.Frame(self.root, relief="groove", bd=5, bg="blue")
         panelFrame.place(x=0, rely=0.1, relwidth=0.2, relheight=0.9)  
 
-        scrollCanvas = tk.Canvas(panelFrame, bg="blue")
+        # Canvas pre skrolovateľnú oblasť
+        scrollCanvas = tk.Canvas(panelFrame, bg="blue", highlightthickness=0)
         scrollCanvas.pack(side="left", fill="both", expand=True)
 
+        # Scrollbar
         scrollbar = tk.Scrollbar(panelFrame, orient="vertical", command=scrollCanvas.yview)
         scrollbar.pack(side="right", fill="y")
 
+        # Kontejner na tlačidlá vo vnútri Canvas
         self.buttonContainer = tk.Frame(scrollCanvas, bg="blue")
         scrollCanvas.create_window((0, 0), window=self.buttonContainer, anchor="nw")
 
+        # Synchronizácia skrolovania
         scrollCanvas.configure(yscrollcommand=scrollbar.set)
-        self.buttonContainer.bind("<Configure>", lambda event: scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all")))
+
+        # Dynamická aktualizácia skrolovacej oblasti
+        def update_scrollregion(event):
+            scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all"))
+
+        self.buttonContainer.bind("<Configure>", update_scrollregion)
+
+        # Skrolovanie pomocou kolieska myši
+        def on_mousewheel(event):
+            scrollCanvas.yview_scroll(-1 * int(event.delta / 120), "units")
+
+        scrollCanvas.bind_all("<MouseWheel>", on_mousewheel)
 #-------------------------------------------------------------------------------------
         for Formula in self.OperationName:
             button = tk.Button(

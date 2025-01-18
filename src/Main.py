@@ -3,12 +3,13 @@ import tkinter.font as tkFont
 from TeoriaClass import Teoria
 from CalculatorClass import Calculator
 from SimulatorClass import VisualCircuitSimulator
+from QuizClass import Quiz
 #---------------------------------------------------
 root = tk.Tk()
 root.attributes("-fullscreen", True)
 image = tk.PhotoImage(file="background.png")
 #---------------------------------------------------
-screenWidth = root.winfo_screenwidth()
+screenWidth = root.winfo_screenwidth() 
 screenHeight = root.winfo_screenheight()
 baseFontSize = int(min(screenWidth, screenHeight) * 0.03)
 fontSize = tkFont.Font(family="Arial", size=baseFontSize)
@@ -40,12 +41,18 @@ def RunSimulation():
     ClearTabs()
     VisualCircuitSimulator(root, ClearTabs, open_tabs) 
 #-------------------------------------------------------------------------------------
+def RunQuiz():
+    ClearTabs()
+    Quiz() 
+#-------------------------------------------------------------------------------------
 TeoriaOpenButton= tk.Button(root,text="Teória",font=fontSize,bg="lightblue",bd=None,command=RunTeoriaTab)
-TeoriaOpenButton.place(relx=0.25, rely=0.005, relwidth=0.1,relheight=0.06)
+TeoriaOpenButton.place(relx=0.001, rely=0.005, relwidth=0.1,relheight=0.06)
 CalculatorOpenButton = tk.Button(root,text="Kalkulačka",font=fontSize,bg="lightblue",bd=None,command=RunCalculator)
-CalculatorOpenButton.place(relx=0.35, rely=0.005, relwidth=0.18,relheight=0.06)
+CalculatorOpenButton.place(relx=0.101, rely=0.005, relwidth=0.18,relheight=0.06)
 SimulatorOpenButton = tk.Button(root,text="Simulácie obvodov",font=fontSize,bg="lightblue",bd=None,command=RunSimulation)
-SimulatorOpenButton.place(relx=0.53, rely=0.005, relwidth=0.27,relheight=0.06)
+SimulatorOpenButton.place(relx=0.281, rely=0.005, relwidth=0.27,relheight=0.06)
+QuizOpenButton = tk.Button(root,text="Kvíz z teórie",font=fontSize,bg="lightblue",bd=None,command=RunQuiz)
+QuizOpenButton.place(relx=0.551, rely=0.005, relwidth=0.27,relheight=0.06)
 ClassTeory = RunTeoriaTab()
 root.mainloop()
 #-------------------------------------------------------------------------------------

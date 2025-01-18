@@ -1,0 +1,11 @@
+Čo vyjadruje Ohmov zákon?;Vzťah medzi napätím, prúdom a odporom;Vzťah medzi kapacitou a induktivitou;Vzťah medzi výkonovým ziskom a stratou;Vzťah medzi teplotou a rezistivitou
+Aká je jednotka odporu?;Ohm (Ω);Volt (V);Ampér (A);Henry (H)
+Čo vyjadruje kapacita?;Schopnosť kondenzátora uchovávať elektrický náboj;Schopnosť vodiča odolávať prúdu;Schopnosť cievky vytvárať magnetické pole;Schopnosť rezistora znižovať napätie
+Aká je jednotka kapacity?;Farad (F);Ohm (Ω);Volt (V);Henry (H)
+Čo vyjadruje induktivita?;Schopnosť cievky vytvárať magnetické pole;Schopnosť rezistora obmedziť prúd;Schopnosť kondenzátora uchovávať náboj;Schopnosť vodiča odolávať teplote
+Aká je jednotka induktivity?;Henry (H);Farad (F);Volt (V);Ampér (A)
+Aká je bezpečná hodnota napätia pre DC?;Maximálne 120 V;Maximálne 60 V;Maximálne 230 V;Maximálne 400 V
+Aká je bezpečná hodnota napätia pre AC?;Maximálne 50 V;Maximálne 60 V;Maximálne 120 V;Maximálne 400 V
+Čo hovorí Kirchhoffov zákon prúdu?;Súčet prúdov do uzla je rovný súčtu prúdov z uzla;Súčet napätí v obvode je rovný nule;Súčet odporov v sériovom zapojení je rovný súčtu ich hodnôt;Prúd v paralelnom obvode je rovnaký vo všetkých vetvách
+Čo hovorí Kirchhoffov zákon napätia?;Súčet napätí v uzavretom obvode je rovný nule;Súčet prúdov do uzla je rovný súčtu prúdov z uzla;Súčet odporov v paralelnom zapojení je rovný ich priemeru;Napätie je rovnaké vo všetkých vetvách obvodu
+Aký materiál má najlepšiu elektrickú vodivosť?;Striebro;Meď;Hliník;Zlato

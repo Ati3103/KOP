@@ -9,9 +9,10 @@ class Teoria:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.ThemeName = ["Napätie","Prúd","Odpor","Kapacita","Induktivita","Ohmov zákon","Kirchhoffove Zákony","Vodiče"]
-        self.ThemeWithSimulation = ["Prúd", "Kirchhoffove Zákony"]
-        self.CurrentTheme = 0
+        self.ThemeName = ["Napätie","Prúd","Odpor","Kapacita","Induktivita","Ohmov zákon","Kirchhoffove Zákony","Vodiče","x","x","x","x","x","x","x","x"]
+        self.CurrentThemeNumber = 0
+        self.CurrentThemeName = "Napätie"
+        
         
 
         screenWidth = root.winfo_screenwidth()
@@ -27,26 +28,44 @@ class Teoria:
 #-------------------------------------------------------------------------------------
 
        
+        # Panel na tlačidlá s témami
         panelFrame = tk.Frame(self.root, relief="groove", bd=5, bg="blue")
         panelFrame.place(x=0, rely=0.1, relwidth=0.2, relheight=0.9)  
 
-        scrollCanvas = tk.Canvas(panelFrame, bg="blue")
+        # Canvas pre skrolovateľnú oblasť
+        scrollCanvas = tk.Canvas(panelFrame, bg="blue", highlightthickness=0)
         scrollCanvas.pack(side="left", fill="both", expand=True)
 
+        # Scrollbar
         scrollbar = tk.Scrollbar(panelFrame, orient="vertical", command=scrollCanvas.yview)
         scrollbar.pack(side="right", fill="y")
 
+        # Kontejner na tlačidlá vo vnútri Canvas
         self.buttonContainer = tk.Frame(scrollCanvas, bg="blue")
         scrollCanvas.create_window((0, 0), window=self.buttonContainer, anchor="nw")
 
+        # Synchronizácia skrolovania
         scrollCanvas.configure(yscrollcommand=scrollbar.set)
-        self.buttonContainer.bind("<Configure>", lambda event: scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all")))
+
+        # Dynamická aktualizácia skrolovacej oblasti
+        def update_scrollregion(event):
+            scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all"))
+
+        self.buttonContainer.bind("<Configure>", update_scrollregion)
+
+        # Skrolovanie pomocou kolieska myši
+        def on_mousewheel(event):
+            scrollCanvas.yview_scroll(-1 * int(event.delta / 120), "units")
+
+        scrollCanvas.bind_all("<MouseWheel>", on_mousewheel)
         
-        nextButton = tk.Button(self.root, text="Ďalej ↓",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(1),self.showSimulation(0)))
+        nextButton = tk.Button(self.root, text="Ďalej ↓",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(1)))
         nextButton.place(relx=0.925, rely = 0.55, relwidth=0.07, relheight=0.04)
-        previousButton = tk.Button(self.root, text="Naspäť ↑",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(0),self.showSimulation(0)))
+        previousButton = tk.Button(self.root, text="Naspäť ↑",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(0)))
         previousButton.place(relx=0.925, rely = 0.5, relwidth=0.07, relheight=0.04)
-        self.showSimulationButton = tk.Button(self.root, text="Simulácia", font=self.fontSize, bg= "white", border=5, command=lambda:self.showSimulation(1))
+        
+        page2button = tk.Button(self.root, text="Strana 2",font=self.fontSize,bg="white", border=5, command=lambda:(self.secondPage()))
+        page2button.place(relx=0.925, rely = 0.45, relwidth=0.07, relheight=0.04)
         
 #-------------------------------------------------------------------------------------
         for Theme in self.ThemeName:
@@ -59,46 +78,43 @@ class Teoria:
                 bg="black",
                 fg="white",
                 font=self.fontSize,
-                command=lambda Tema=Theme: self.buttonAction(Tema)  
+                command=lambda Tema=Theme: self.buttonAction(Tema,1)  
             )
             button.pack(pady=5, padx=3, anchor="w")
 #-------------------------------------------------------------------------------------
     def NextPrevious(self, state):
         if state == 1:
             try:
-                self.buttonAction(self.ThemeName[self.CurrentTheme + 1])
+                self.buttonAction(self.ThemeName[self.CurrentThemeNumber + 1],1)
             except:
                 raise ValueError    
         if state == 0:
             try:
-                self.buttonAction(self.ThemeName[self.CurrentTheme - 1])
+                self.buttonAction(self.ThemeName[self.CurrentThemeNumber - 1],1)
             except:
                 raise ValueError
         
-    def showSimulation(self, state):
-        if state == 0:  
-            if self.ThemeName[self.CurrentTheme] in self.ThemeWithSimulation:
-               
-                self.showSimulationButton.place(relx=0.925, rely=0.45, relwidth=0.07, relheight=0.04)
-            else:
-                
-                self.showSimulationButton.place_forget()
-        if state == 1:
-            self.ClearFunction()
-            VisualCircuitSimulator(self.root, self.ClearFunction, self.OpenList, self.CurrentTheme)
+    def secondPage(self):
+        textToBeOpened = self.CurrentThemeName + "2"
+        self.buttonAction(textToBeOpened,0)
+        
        
     
-    def buttonAction(self, buttonName):
-        self.CurrentTheme = self.ThemeName.index(buttonName)
+    def buttonAction(self, buttonName, requestType):
+        if requestType == 1:
+            self.CurrentThemeNumber = self.ThemeName.index(buttonName)
+            self.CurrentThemeName = buttonName
         self.ClearFunction()
-        self.showSimulation(0)
-        imagePath = Image.open(f"Teoria/{buttonName}.png")
-        resizedImage = imagePath.resize((self.ImageW, self.ImageH))
-        tkImage = ImageTk.PhotoImage(resizedImage)
-        imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
-        imgLabel.image = tkImage  
-        imgLabel.place(relx=0.22,rely=0.1)  
-        self.OpenList.append(imgLabel)
+        try:
+            imagePath = Image.open(f"Teoria/{buttonName}.png")
+            resizedImage = imagePath.resize((self.ImageW, self.ImageH))
+            tkImage = ImageTk.PhotoImage(resizedImage)
+            imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
+            imgLabel.image = tkImage  
+            imgLabel.place(relx=0.22,rely=0.1)  
+            self.OpenList.append(imgLabel)
+        except(FileNotFoundError, ValueError):
+            print("No second page found.")
         
         try:
             try:
