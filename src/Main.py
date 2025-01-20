@@ -23,26 +23,34 @@ headerLabel.place(x=0, y=0,relheight=0.068)
 closeButton = tk.Button(root, text="X", font=fontSize, fg="white", bg="red",bd=5, relief="solid",  command=root.destroy)
 closeButton.place(relx=1.0, rely=0.001,relwidth=0.05,relheight=0.065 ,anchor="ne")
 #----------------------------------------------------------------------------------------------------------------------------------------
-open_tabs = []
+openTabs = []
+openButtons = []
 #-------------------------------
 def ClearTabs():
-    for widget in open_tabs:
+    for widget in openTabs:
         widget.destroy()
 #-------------------------------------------------------------------------------------
+def RemoveButtons():
+    for button in openButtons:
+        button.place_forget()
 def RunTeoriaTab():
     ClearTabs()
-    Teoria(root, ClearTabs, open_tabs)   
+    RemoveButtons()
+    Teoria(root, ClearTabs,RemoveButtons, openTabs,openButtons,0)   
 #-------------------------------------------------------------------------------------    
 def RunCalculator():
     ClearTabs()
-    Calculator(root, ClearTabs, open_tabs) 
+    RemoveButtons()
+    Calculator(root, ClearTabs, openTabs) 
 #-------------------------------------------------------------------------------------  
 def RunSimulation():
     ClearTabs()
-    VisualCircuitSimulator(root, ClearTabs, open_tabs) 
+    RemoveButtons()
+    VisualCircuitSimulator(root, ClearTabs, openTabs) 
 #-------------------------------------------------------------------------------------
 def RunQuiz():
     ClearTabs()
+    RemoveButtons()
     Quiz() 
 #-------------------------------------------------------------------------------------
 TeoriaOpenButton= tk.Button(root,text="Teória",font=fontSize,bg="lightblue",bd=None,command=RunTeoriaTab)

@@ -14,7 +14,7 @@ class Calculator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky","c","c","c","c","c","c","c","c","c","c","c","c","c"]
+        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky"]
         
         
         screenWidth = root.winfo_screenwidth()
@@ -245,10 +245,13 @@ class Calculator:
             self.entryl.place(relx=0.25,rely=0.01)
             self.entryA = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
             self.entryA.place(relx=0.25,rely=0.08)
-            self.Copper = tk.Checkbutton(frame, text="Meď", font=self.fontSize, variable=self.isCopper )
-            self.Copper.place(relx=0.35, rely = 0.2)
+            self.entryρ = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryρ.place(relx=0.25,rely=0.15)
+            
+            self.Copper = tk.Checkbutton(frame, text="Meď", font=self.fontSize, variable=self.isCopper)
+            self.Copper.place(relx=0.9, rely = 0.28)
             self.Aluminium = tk.Checkbutton(frame, text="Hliník", font=self.fontSize, variable=self.isAluminium)
-            self.Aluminium.place(relx=0.45, rely = 0.2)
+            self.Aluminium.place(relx=0.45, rely = 0.28)
             
             self.labell = tk.Label(frame,text="l [m]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
             self.labell.place(relx=0.07,rely=0.01)
@@ -257,7 +260,8 @@ class Calculator:
             self.labelMaterial = tk.Label (frame, text="Materiál vodiča",font=self.valueFontSize, fg="white", bg="DeepSkyBlue4")
             self.labelMaterial.place(relx=0.07, rely=0.2)
             
-
+           
+                
             
             self.Result = tk.Label(frame, text=f"Výsledok: R = {self.result} Ω",font=self.fontSize,bg="DeepSkyBlue4",fg="white")
             self.Result.place(relx=0.13,rely=0.25,relwidth=0.7,relheight=0.15)
@@ -287,24 +291,34 @@ class Calculator:
                 A = self.entryA.get()
                 ρ1 = self.isCopper.get()
                 ρ2 = self.isAluminium.get()
-                ρ = None
-
+                ρ = self.entryρ.get()
+                
+                
+                    
+                
+                
+                
                 try:
                     
                     l = float(l) if l else None
                     A = float(A) if A else None
-                    
-                    
-                    if ρ1 == 1 and ρ2 == 0:
-                        ρ = 1.68e-8  
+                    ρ = float(ρ) if ρ else None
+                  
+                        
+                    if ρ != None:
+                        pass
+                    elif ρ1 == 1 and ρ2 == 0:
+                        ρ = 1.68e-8
+                        self.entryρ.insert(0,"1.68e-8")  
                     elif ρ1 == 0 and ρ2 == 1:       
-                        ρ = 2.7e-8  
-                    else:
-                        ρ = None  
+                        ρ = 2.7e-8
+                        self.entryρ.insert(0,"2.7e-8")  
+                    elif ρ1 == 1 and ρ2 == 1:
+                        ρ = None 
+                        self.result = "Vyberte len 1 materiál" 
 
                     
                     if l is not None and A is not None and ρ is not None:
-                        print(f"Length: {l}, Area: {A}, Resistivity: {ρ}")
                         
                         resistance = ρ * (l / (A * 1e-6))
                         self.result = f"{resistance:.6f} Ω"  

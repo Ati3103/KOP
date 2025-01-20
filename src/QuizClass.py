@@ -23,7 +23,7 @@ class Quiz:
         
         closeButton = tk.Button(self.root, text="X", font="Arial 20", fg="white", bg="red",bd=5, relief="solid",  command=self.root.destroy)
         closeButton.place(relx=1.0, rely=0.001,relwidth=0.05,relheight=0.065 ,anchor="ne")
-
+        
         self.questionLabel = tk.Label(self.root, text="",font=("Arial, 50"))
         self.questionLabel.place(relx=0.15,rely=0.2)
 
@@ -64,25 +64,32 @@ class Quiz:
         self.root.mainloop()
 
     def showQuestion(self):
-        
         if self.currentQuestionIndex < len(self.selectedQuestions):
             question, answers, correctAnswer = self.selectedQuestions[self.currentQuestionIndex]
 
-            self.questionLabel.config(text=f"Otázka {self.currentQuestionIndex + 1}: {question}")
+            
+            self.questionLabel.config(text=f"Otázka {self.currentQuestionIndex + 1}/10: {question}")
+            self.questionLabel.place(relx=0.5, rely=0.2, anchor="center")  
 
+            
             shuffledAnswers = answers[:]
             random.shuffle(shuffledAnswers)
 
+            prefixes = ["A", "B", "C", "D"]
             for idx, answer in enumerate(shuffledAnswers):
-                self.buttons[idx].config(text=answer, state=tk.NORMAL, bg="SystemButtonFace")
+                self.buttons[idx].config(text=f"{prefixes[idx]}. {answer}", state=tk.NORMAL, bg="SystemButtonFace")
 
-            self.correctAnswer = correctAnswer  
+           
+            self.correctAnswer = correctAnswer
+            self.shuffledAnswers = shuffledAnswers  
+
+            
+            self.statusLabel.place(relx=0.5, rely=0.1, anchor="center")  
         else:
             self.endQuiz()
 
     def checkAnswer(self, idx):
-        
-        selectedAnswer = self.buttons[idx].cget("text")
+        selectedAnswer = self.buttons[idx].cget("text")[3:].strip()  # Remove the A, B, C, D prefix and extra spaces
         if selectedAnswer == self.correctAnswer:
             self.score += 1
             self.statusLabel.config(text="Správne!", fg="green")

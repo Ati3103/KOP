@@ -286,10 +286,10 @@ class VisualCircuitSimulator:
 
         # Informácie o obvode
         voltageLabel = tk.Label(self.canvas, text=f"Napätie: {voltage} V", font=self.fontSize, bg="white")
-        voltageLabel.place(x=200, y=100)
+        voltageLabel.place(x=120, y=440)
 
-        currentLabel = tk.Label(self.canvas, text=f"Prúd celkovo: {currentTotal:.2f} A", font=self.fontSize, bg="white")
-        currentLabel.place(x=200, y=150)
+        currentLabel = tk.Label(self.canvas, text=f"Prúd celkovo: {currentTotal:.2f} A", font=self.fontSize, bg="white",fg="red")
+        currentLabel.place(x=200, y=270)
 
         calculateCurrents()
 
@@ -314,6 +314,11 @@ class VisualCircuitSimulator:
         C = 0.001  
         U_in = 10  
 
+        self.I_state = tk.BooleanVar(value=1)
+        self.R_state = tk.BooleanVar(value=1)
+        self.L_state = tk.BooleanVar(value=1)
+        self.C_state = tk.BooleanVar(value=1)
+        
         
         def updateCircuit():
             # Výpočet časového priebehu
@@ -333,12 +338,20 @@ class VisualCircuitSimulator:
             u_l = L * np.gradient(i_t, t)
             u_c = U_in - u_r - u_l
 
+           
+            
+            
+            
             # Aktualizácia grafu
             ax.clear()
-            ax.plot(t, i_t, label="Prúd (A)")
-            ax.plot(t, u_r, label="Napätie na R (V)")
-            ax.plot(t, u_l, label="Napätie na L (V)")
-            ax.plot(t, u_c, label="Napätie na C (V)")
+            if self.I_state.get() == 1:
+                ax.plot(t, i_t, label="Prúd (A)")
+            if self.R_state.get() == 1:
+                ax.plot(t, u_r, label="Napätie na R (V)")
+            if self.L_state.get() == 1:
+                ax.plot(t, u_l, label="Napätie na L (V)")
+            if self.C_state.get() == 1:
+                ax.plot(t, u_c, label="Napätie na C (V)")
             ax.legend()
             ax.set_title("Priebeh napätia a prúdu")
             ax.set_xlabel("Čas (s)")
@@ -346,7 +359,7 @@ class VisualCircuitSimulator:
             canvas.draw()
 
         # Funkcia na aktualizáciu hodnôt
-        def updateValues(event=None):
+        def updateValues(self,*args,event=None):
             nonlocal R, L, C, U_in
             R = r_scale.get()
             L = l_scale.get()
@@ -365,27 +378,42 @@ class VisualCircuitSimulator:
 
         # Ovládacie prvky
         controlsFrame = tk.Frame(self.canvas,bg="white")
-        controlsFrame.place(relx=0.2,rely=0.78,relwidth=0.3,relheight=0.2)
+        controlsFrame.place(relx=0.2,rely=0.7,relwidth=0.8,relheight=0.28)
+        
+        self.I_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.I_state)
+        self.I_check.place(relx=0.13,rely=0.85, relwidth=0.05,relheight=0.05)
+        self.R_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.R_state)
+        self.R_check.place(relx=0.13,rely=0.1, relwidth=0.05,relheight=0.05)
+        self.L_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.L_state)
+        self.L_check.place(relx=0.13,rely=0.3, relwidth=0.05,relheight=0.05)
+        self.C_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.C_state)
+        self.C_check.place(relx=0.13,rely=0.5, relwidth=0.05,relheight=0.05)
+        
+        self.R_state.trace_add("write", updateValues)
+        self.L_state.trace_add("write", updateValues)
+        self.C_state.trace_add("write", updateValues)
+        self.I_state.trace_add("write", updateValues)
 
-        tk.Label(controlsFrame, text="R (Ohm):", width=20,font=self.fontSize,bg="white",justify="left").grid(row=0, column=0)
-        r_scale = tk.Scale(controlsFrame, from_=1, to=100, orient="horizontal",bg="white", command=updateValues)
+        tk.Label(controlsFrame, text="R (Ω):", width=20,font=self.fontSize,bg="white",justify="left").place(relx=0.01,rely=0.05,relwidth=0.12,relheight=0.15)
+        r_scale = tk.Scale(controlsFrame, from_=1, to=100, orient="horizontal",border=5,bg="white", command=updateValues)
         r_scale.set(R)
-        r_scale.grid(row=0, column=1)
+        r_scale.place(relx=0.21,rely=0.05,relwidth=0.5,relheight=0.2)
 
-        tk.Label(controlsFrame, text="L (H):",font=self.fontSize,bg="white",justify="left").grid(row=1, column=0)
-        l_scale = tk.Scale(controlsFrame, from_=0.01, to=1, resolution=0.01, orient="horizontal",bg="white", command=updateValues)
+        tk.Label(controlsFrame, text="L (H):",font=self.fontSize,bg="white",justify="left").place(relx=0.01,rely=0.25,relwidth=0.12,relheight=0.15)
+        l_scale = tk.Scale(controlsFrame, from_=0.01, to=1, resolution=0.01, orient="horizontal",border=5,bg="white", command=updateValues)
         l_scale.set(L)
-        l_scale.grid(row=1, column=1)
+        l_scale.place(relx=0.21,rely=0.25,relwidth=0.5,relheight=0.2)
 
-        tk.Label(controlsFrame, text="C (F):",font=self.fontSize,bg="white",justify="left").grid(row=2, column=0)
-        c_scale = tk.Scale(controlsFrame, from_=0.0001, to=0.01, resolution=0.0001, orient="horizontal",bg="white", command=updateValues)
+        tk.Label(controlsFrame, text="C (F):",font=self.fontSize,bg="white",justify="left").place(relx=0.01,rely=0.45,relwidth=0.12,relheight=0.15)
+        c_scale = tk.Scale(controlsFrame, from_=0.0001, to=0.01, resolution=0.0001, orient="horizontal",border=5,bg="white", command=updateValues)
         c_scale.set(C)
-        c_scale.grid(row=2, column=1)
+        c_scale.place(relx=0.21,rely=0.45,relwidth=0.5,relheight=0.2)
 
-        tk.Label(controlsFrame, text="U (V):",font=self.fontSize,bg="white",justify="left").grid(row=3, column=0)
-        u_scale = tk.Scale(controlsFrame, from_=1, to=50, orient="horizontal",bg="white", command=updateValues)
+        tk.Label(controlsFrame, text="U (V):",font=self.fontSize,bg="white",justify="left").place(relx=0.01,rely=0.65,relwidth=0.12,relheight=0.15)
+        tk.Label(controlsFrame, text="I (A):",font=self.fontSize,bg="white",justify="left").place(relx=0.01,rely=0.85,relwidth=0.12,relheight=0.15)
+        u_scale = tk.Scale(controlsFrame, from_=1, to=50, orient="horizontal",border=5,bg="white", command=updateValues)
         u_scale.set(U_in)
-        u_scale.grid(row=3, column=1)
+        u_scale.place(relx=0.21,rely=0.65,relwidth=0.5,relheight=0.2)
 
         updateCircuit()
 #----------------------------------------------------------------------------------------------------------------------        
@@ -453,31 +481,31 @@ class VisualCircuitSimulator:
 
         # Ovládacie prvky
         controlsFrame = tk.Frame(self.canvas,bg="white")
-        controlsFrame.place(relx=0.05,rely=0.7)
+        controlsFrame.place(relx=0.05,rely=0.6,relwidth=0.65,relheight=0.4)
 
-        tk.Label(controlsFrame, text="Primárne závity (N1):",width=20, border=5,font=self.fontSize,bg="white").grid(row=0, column=0)
+        tk.Label(controlsFrame, text="Primárne závity (N1):",width=20, border=5,font=self.fontSize,bg="white").place(relx=0.01,rely=0.05,relwidth=0.4,relheight=0.15)
         n1_scale = tk.Scale(controlsFrame, from_=10, to=1000, orient="horizontal",border=5,bg="white",command=updateValues)
         n1_scale.set(N1)
-        n1_scale.grid(row=0, column=1)
+        n1_scale.place(relx=0.41,rely=0.05,relwidth=0.3,relheight=0.2)
 
-        tk.Label(controlsFrame, text="Sekundárne závity (N2):",font=self.fontSize,bg="white").grid(row=1, column=0)
+        tk.Label(controlsFrame, text="Sekundárne závity (N2):",font=self.fontSize,bg="white").place(relx=0.01,rely=0.25,relwidth=0.4,relheight=0.15)
         n2_scale = tk.Scale(controlsFrame, from_=10, to=1000, orient="horizontal",border=5,bg="white", command=updateValues)
         n2_scale.set(N2)
-        n2_scale.grid(row=1, column=1)
+        n2_scale.place(relx=0.41,rely=0.25,relwidth=0.3,relheight=0.2)
 
-        tk.Label(controlsFrame, text="Primárne napätie (U):",font=self.fontSize,bg="white").grid(row=2, column=0)
+        tk.Label(controlsFrame, text="Primárne napätie (U):",font=self.fontSize,bg="white").place(relx=0.01,rely=0.45,relwidth=0.4,relheight=0.15)
         u1_scale = tk.Scale(controlsFrame, from_=10, to=1000, orient="horizontal",border=5,bg="white", command=updateValues)
         u1_scale.set(U1)
-        u1_scale.grid(row=2, column=1)
+        u1_scale.place(relx=0.41,rely=0.45,relwidth=0.3,relheight=0.2)
 
-        tk.Label(controlsFrame, text="Zaťaženie (R):",font=self.fontSize,bg="white").grid(row=3, column=0)
+        tk.Label(controlsFrame, text="Zaťaženie (R):",font=self.fontSize,bg="white").place(relx=0.01,rely=0.65,relwidth=0.4,relheight=0.15)
         r_load_scale = tk.Scale(controlsFrame, from_=1, to=100, orient="horizontal",border=5,bg="white", command=updateValues)
         r_load_scale.set(R)
-        r_load_scale.grid(row=3, column=1)
+        r_load_scale.place(relx=0.41,rely=0.65,relwidth=0.3,relheight=0.2)
 
         
         informationLabel = tk.Label(self.canvas, text="", font=self.fontSize,bg="white",justify="left")
-        informationLabel.place(relx=0.5,rely=0.6,relwidth=0.3,relheight=0.35)
+        informationLabel.place(relx=0.55,rely=0.6,relwidth=0.3,relheight=0.35)
 
         updateCircuit()
 #----------------------------------------------------------------------------------------------------------------------        

@@ -5,13 +5,18 @@ from SimulatorClass import VisualCircuitSimulator
 
 
 class Teoria:
-    def __init__(self, root, clearFunction, openTabs):
+    def __init__(self, root, clearFunction,removeButtonsFunction, openTabs, openButtons, removeButtons):
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.ThemeName = ["Napätie","Prúd","Odpor","Kapacita","Induktivita","Ohmov zákon","Kirchhoffove Zákony","Vodiče","x","x","x","x","x","x","x","x"]
+        self.RemoveButtons = removeButtonsFunction
+        self.ButtonList = openButtons
+        self.ThemeNames = ["Napätie","Prúd","Odpor","Kapacita","Induktivita","Ohmov zákon","Kirchhoffove Zákony","Vodiče"]
+        self.ThemesWithSecondPage = ["Napätie"]
         self.CurrentThemeNumber = 0
         self.CurrentThemeName = "Napätie"
+        self.isPage2 = False
+        
         
         
 
@@ -59,16 +64,17 @@ class Teoria:
 
         scrollCanvas.bind_all("<MouseWheel>", on_mousewheel)
         
-        nextButton = tk.Button(self.root, text="Ďalej ↓",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(1)))
-        nextButton.place(relx=0.925, rely = 0.55, relwidth=0.07, relheight=0.04)
-        previousButton = tk.Button(self.root, text="Naspäť ↑",font=self.fontSize,bg="white", border=5, command=lambda:(self.NextPrevious(0)))
-        previousButton.place(relx=0.925, rely = 0.5, relwidth=0.07, relheight=0.04)
+        self.nextButton = tk.Button(self.root, text="Ďalej ↓",font=self.fontSize,bg="springgreen",fg="white", border=5, command=lambda:(self.NextPrevious(1)))
+        self.nextButton.place(relx=0.5, rely = 0.945, relwidth=0.075, relheight=0.04)
+        self.previousButton = tk.Button(self.root, text="Naspäť ↑",font=self.fontSize,bg="tomato",fg="white", border=5, command=lambda:(self.NextPrevious(0)))
+        self.page2button = tk.Button(self.root, text="Strana 1/2",font=self.fontSize,bg="white", border=2,relief="solid", command=lambda:(self.secondPage()))
         
-        page2button = tk.Button(self.root, text="Strana 2",font=self.fontSize,bg="white", border=5, command=lambda:(self.secondPage()))
-        page2button.place(relx=0.925, rely = 0.45, relwidth=0.07, relheight=0.04)
         
+        self.buttonAction("Napätie", 1)
+                
+                
 #-------------------------------------------------------------------------------------
-        for Theme in self.ThemeName:
+        for Theme in self.ThemeNames:
             button = tk.Button(
                 self.buttonContainer,
                 width=int(self.Cw * 1.2),
@@ -82,36 +88,78 @@ class Teoria:
             )
             button.pack(pady=5, padx=3, anchor="w")
 #-------------------------------------------------------------------------------------
+        
+            
+       
+
     def NextPrevious(self, state):
+        self.isPage2 = False
+        self.page2button.config(text="Strana 1/2")
         if state == 1:
             try:
-                self.buttonAction(self.ThemeName[self.CurrentThemeNumber + 1],1)
+                self.buttonAction(self.ThemeNames[self.CurrentThemeNumber + 1],1)
             except:
                 raise ValueError    
         if state == 0:
             try:
-                self.buttonAction(self.ThemeName[self.CurrentThemeNumber - 1],1)
+                self.buttonAction(self.ThemeNames[self.CurrentThemeNumber - 1],1)
             except:
                 raise ValueError
+    
         
     def secondPage(self):
-        textToBeOpened = self.CurrentThemeName + "2"
-        self.buttonAction(textToBeOpened,0)
-        
+        if self.isPage2 == False:
+            self.isPage2 = True
+            self.page2button.config(text="Strana 2/2")
+            textToBeOpened = self.CurrentThemeName + "2"
+            self.buttonAction(textToBeOpened,0)
+        elif self.isPage2 == True:
+            self.isPage2 = True
+            self.page2button.config(text="Strana 1/2")
+            textToBeOpened = self.CurrentThemeName 
+            self.buttonAction(textToBeOpened,1)
+            
+    
+            
        
     
     def buttonAction(self, buttonName, requestType):
-        if requestType == 1:
-            self.CurrentThemeNumber = self.ThemeName.index(buttonName)
-            self.CurrentThemeName = buttonName
         self.ClearFunction()
+        for theme in self.ThemesWithSecondPage:
+            if theme == buttonName:
+                self.isPage2 = False
+                self.page2button.config(text="Strana 1/2")
+                self.page2button.place(relx=0.22, rely = 0.935, relwidth=0.1, relheight=0.06)
+                self.ButtonList.append(self.page2button)
+            elif theme + "2" == buttonName:
+                self.page2button.place(relx=0.22, rely = 0.935, relwidth=0.1, relheight=0.06)
+                self.ButtonList.append(self.page2button)
+            elif theme != buttonName:
+                if self.page2button.winfo_exists():
+                    self.page2button.place_forget()
+        if requestType == 1: #kliknutie na tlačidlo, ak by bola poslaná 0, znamenalo by to žiadosť o pokračovanie daného učiva
+            self.CurrentThemeNumber = self.ThemeNames.index(buttonName)
+            self.CurrentThemeName = buttonName
+        if self.CurrentThemeNumber == 0:
+            if self.previousButton.winfo_exists():
+                self.previousButton.place_forget()
+        elif self.CurrentThemeNumber != 0:
+            self.previousButton.place(relx=0.5, rely = 0.08, relwidth=0.075, relheight=0.04)
+            self.ButtonList.append(self.previousButton)
+        if self.CurrentThemeNumber >= len(self.ThemeNames)-1:
+            if self.nextButton.winfo_exists():    
+                self.nextButton.place_forget() 
+        elif self.CurrentThemeNumber != len(self.ThemeNames):
+            self.nextButton.place(relx=0.5, rely = 0.945, relwidth=0.075, relheight=0.04)
+            self.ButtonList.append(self.nextButton) 
+        
         try:
             imagePath = Image.open(f"Teoria/{buttonName}.png")
             resizedImage = imagePath.resize((self.ImageW, self.ImageH))
             tkImage = ImageTk.PhotoImage(resizedImage)
             imgLabel = tk.Label(self.root, image=tkImage,relief="solid")
             imgLabel.image = tkImage  
-            imgLabel.place(relx=0.22,rely=0.1)  
+            imgLabel.place(relx=0.22,rely=0.13)  
             self.OpenList.append(imgLabel)
         except(FileNotFoundError, ValueError):
             print("No second page found.")
@@ -131,11 +179,12 @@ class Teoria:
 
                 frameIndex = 0
                 def updateFrame():
+                    if gifLabel.winfo_exists():    
                         nonlocal frameIndex
                         gifLabel.config(image=frames[frameIndex])
                         frameIndex = (frameIndex + 1) % len(frames)
                         self.root.after(100, updateFrame)
-
+                
                 updateFrame()
             except:
                 imagePath = Image.open(f"GIF/{buttonName}.png")
