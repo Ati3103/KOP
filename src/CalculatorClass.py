@@ -232,107 +232,121 @@ class Calculator:
             self.StartButton.place(relx=0.33,rely=0.4,relwidth=0.3,relheight=0.1)
     #-------------------------------------------------------------------------------------    
     def CalculateWireResistance(self):
-            self.ClearFunction()
-            self.result = 0
-            frame = tk.Frame(self.root, width=int(self.Cw*70), height=int(self.Ch*25),bg="DeepSkyBlue4",bd=5, relief="solid")
-            frame.place(relx=0.3,rely=0.1,relwidth=0.5,relheight=0.8)
-            self.OpenList.append(frame)
+        self.ClearFunction()
+        self.result = 0
+        frame = tk.Frame(self.root, width=int(self.Cw * 70), height=int(self.Ch * 25), bg="DeepSkyBlue4", bd=5, relief="solid")
+        frame.place(relx=0.3, rely=0.1, relwidth=0.5, relheight=0.8)
+        self.OpenList.append(frame)
 
-            self.isCopper = tk.BooleanVar()
-            self.isAluminium = tk.BooleanVar()
-            
-            self.entryl = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
-            self.entryl.place(relx=0.25,rely=0.01)
-            self.entryA = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
-            self.entryA.place(relx=0.25,rely=0.08)
-            self.entryρ = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
-            self.entryρ.place(relx=0.25,rely=0.15)
-            
-            self.Copper = tk.Checkbutton(frame, text="Meď", font=self.fontSize, variable=self.isCopper)
-            self.Copper.place(relx=0.9, rely = 0.28)
-            self.Aluminium = tk.Checkbutton(frame, text="Hliník", font=self.fontSize, variable=self.isAluminium)
-            self.Aluminium.place(relx=0.45, rely = 0.28)
-            
-            self.labell = tk.Label(frame,text="l [m]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
-            self.labell.place(relx=0.07,rely=0.01)
-            self.labelA = tk.Label(frame,text="A [mm2]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
-            self.labelA.place(relx=0.07,rely=0.08)
-            self.labelMaterial = tk.Label (frame, text="Materiál vodiča",font=self.valueFontSize, fg="white", bg="DeepSkyBlue4")
-            self.labelMaterial.place(relx=0.07, rely=0.2)
-            
-           
+        
+
+        
+        self.entryl = tk.Entry(frame, font=self.valueFontSize, bg="DeepSkyBlue4", fg="white")
+        self.entryl.place(relx=0.35, rely=0.01)
+        self.entryA = tk.Entry(frame, font=self.valueFontSize, bg="DeepSkyBlue4", fg="white")
+        self.entryA.place(relx=0.35, rely=0.08)
+        self.entryρ = tk.Entry(frame, font=self.valueFontSize, bg="DeepSkyBlue4", fg="white")
+        self.entryρ.place(relx=0.35, rely=0.15)
+
+        self.isCopper = tk.BooleanVar()
+        self.isAluminium = tk.BooleanVar()
+        
+        self.Copper = tk.Checkbutton(frame, text="Meď",bg="DeepSkyBlue4", font=self.fontSize, variable=self.isCopper)
+        self.Copper.place(relx=0.35, rely=0.22)
+        self.Aluminium = tk.Checkbutton(frame, text="Hliník",bg="DeepSkyBlue4", font=self.fontSize, variable=self.isAluminium)
+        self.Aluminium.place(relx=0.45, rely=0.22)
+
+        self.labell = tk.Label(frame, text="l [m]", font=self.valueFontSize, bg="DeepSkyBlue4", fg="white")
+        self.labell.place(relx=0.15, rely=0.01)
+        self.labelA = tk.Label(frame, text="A [mm²]", font=self.valueFontSize, bg="DeepSkyBlue4", fg="white")
+        self.labelA.place(relx=0.15, rely=0.08)
+        self.labelMaterial = tk.Label(frame, text="ρ", font=self.valueFontSize, fg="white", bg="DeepSkyBlue4")
+        self.labelMaterial.place(relx=0.15, rely=0.15)
+        
+        self.Result = tk.Label(frame, text=f"Výsledok: R = {self.result} Ω", font=self.fontSize, bg="DeepSkyBlue4", fg="white")
+        self.Result.place(relx=0.13, rely=0.3, relwidth=0.7, relheight=0.15)
+        
+        
+        def updateEntry(Material, *args):
+            if self.isCopper.get() and not self.isAluminium.get():
+                self.entryρ.delete(0, tk.END)
+                self.entryρ.insert(0, "1.68e-8")  
+                self.isAluminium.set(False)
+            elif self.isAluminium.get() and not self.isCopper.get():
+                self.entryρ.delete(0, tk.END)
+                self.entryρ.insert(0, "2.7e-8") 
+                self.isCopper.set(False)
+            elif not self.isAluminium.get() and not self.isCopper.get():
+                self.entryρ.delete(0, tk.END)
+            elif self.isAluminium.get() and self.isCopper.get():
+                if Material == "Copper":
+                    self.entryρ.delete(0, tk.END)
+                    self.entryρ.insert(0, "1.68e-8")  
+                    self.isAluminium.set(False)
+                elif Material == "Aluminium":
+                    self.entryρ.delete(0, tk.END)
+                    self.entryρ.insert(0, "2.7e-8") 
+                    self.isCopper.set(False)
+                else:
+                    self.entryρ.delete(0, tk.END)
+                      
+       
+        self.isCopper.trace_add("write", lambda *args:updateEntry("Copper"))
+        self.isAluminium.trace_add("write", lambda*args:updateEntry("Aluminium"))
+
+       
+        formula = r"$R = ρ\cdot \frac{l}{A}$"
+
+       
+        def createFormulaImage(formula):
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize, ha='center', va='center')
+            ax.axis('off')
+
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png')
+            plt.close(fig)
+            buf.seek(0)
+
+            img = Image.open(buf)
+            return ImageTk.PhotoImage(img)
+
+        formulaImage = createFormulaImage(formula)
+
+      
+        self.Info = tk.Label(frame, image=formulaImage, font=self.fontSize, bg="DeepSkyBlue4", fg="white", bd=2, relief="solid")
+        self.Info.place(x=0, rely=0.6, relwidth=1, relheight=0.3)
+
+       
+        def Calculate():
+            l = self.entryl.get()
+            A = self.entryA.get()
+            ρ = self.entryρ.get()
+
+            try:
+                l = float(l) if l else None
+                A = float(A) if A else None
+                ρ = float(ρ) if ρ else None
+
                 
-            
-            self.Result = tk.Label(frame, text=f"Výsledok: R = {self.result} Ω",font=self.fontSize,bg="DeepSkyBlue4",fg="white")
-            self.Result.place(relx=0.13,rely=0.25,relwidth=0.7,relheight=0.15)
+                if l is not None and A is not None and ρ is not None:
+                    resistance = ρ * (l / (A * 1e-6))  
+                    self.result = f"{resistance:.6f} Ω"
+                else:
+                    self.result = "Zadajte všetky potrebné hodnoty"  
 
-            formula = r"$R = ρ\cdot \frac{l}{A}$"
-
-            def create_formula_image(formula):
-                fig, ax = plt.subplots()
-                ax.text(0.5, 0.5, formula, fontsize=self.valueBaseFontSize,ha='center', va='center')
-                ax.axis('off')
-
-                buf = io.BytesIO()
-                fig.savefig(buf, format='png')
-                plt.close(fig)
-                buf.seek(0)
-
-                img = Image.open(buf)
-                return ImageTk.PhotoImage(img)
-            
-            formulaImage = create_formula_image(formula)
-            
-            self.Info = tk.Label(frame, image=formulaImage,font=self.fontSize,bg="DeepSkyBlue4",fg="white",bd=2, relief="solid")
-            self.Info.place(x=0, rely=0.6,relwidth=1,relheight=0.3)
-            
-            def Calculate():
-                l = self.entryl.get()
-                A = self.entryA.get()
-                ρ1 = self.isCopper.get()
-                ρ2 = self.isAluminium.get()
-                ρ = self.entryρ.get()
-                
-                
-                    
-                
-                
-                
-                try:
-                    
-                    l = float(l) if l else None
-                    A = float(A) if A else None
-                    ρ = float(ρ) if ρ else None
-                  
-                        
-                    if ρ != None:
-                        pass
-                    elif ρ1 == 1 and ρ2 == 0:
-                        ρ = 1.68e-8
-                        self.entryρ.insert(0,"1.68e-8")  
-                    elif ρ1 == 0 and ρ2 == 1:       
-                        ρ = 2.7e-8
-                        self.entryρ.insert(0,"2.7e-8")  
-                    elif ρ1 == 1 and ρ2 == 1:
-                        ρ = None 
-                        self.result = "Vyberte len 1 materiál" 
-
-                    
-                    if l is not None and A is not None and ρ is not None:
-                        
-                        resistance = ρ * (l / (A * 1e-6))
-                        self.result = f"{resistance:.6f} Ω"  
-                    else:
-                        self.result = "Nevhodné hodnoty"
-                except ValueError:
-                      self.result = "Nevhodné hodnoty"
+            except ValueError:
+                self.result = "Nevhodné hodnoty"  
 
             
-                self.Result.config(text=f"Výsledok: {self.result}",bg="DeepSkyBlue4",fg="white")
+            self.Result.config(text=f"Výsledok: {self.result}", bg="DeepSkyBlue4", fg="white")
 
-            
-            self.StartButton = tk.Button(frame, text="Vypočítať",font=self.fontSize,bd=2, relief="solid", command=Calculate)
-            self.StartButton.place(relx=0.33,rely=0.4,relwidth=0.3,relheight=0.1)
+       
+        self.StartButton = tk.Button(frame, text="Vypočítať", font=self.fontSize, bd=2, relief="solid", command=Calculate)
+        self.StartButton.place(relx=0.33, rely=0.45, relwidth=0.3, relheight=0.1)
+
+        
+        
     #-------------------------------------------------------------------------------------    
     def CalculateInduction(self):
             self.ClearFunction()
