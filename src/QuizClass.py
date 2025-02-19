@@ -24,7 +24,7 @@ class Quiz:
         closeButton = tk.Button(self.root, text="X", font="Arial 20", fg="white", bg="red",bd=5, relief="solid",  command=self.root.destroy)
         closeButton.place(relx=1.0, rely=0.001,relwidth=0.05,relheight=0.065 ,anchor="ne")
         
-        self.questionLabel = tk.Label(self.root, text="",font=("Arial, 50"))
+        self.questionLabel = tk.Label(self.root, text="",font=("Arial, 40"))
         self.questionLabel.place(relx=0.15,rely=0.2)
 
         self.buttons = []
@@ -33,7 +33,7 @@ class Quiz:
             button.place(relx=0.2, rely=0.4 + i * 0.1, relwidth=0.6, relheight=0.08)
             self.buttons.append(button)
 
-        self.statusLabel = tk.Label(self.root, text="", justify="center",font=("Arial, 50"))
+        self.statusLabel = tk.Label(self.root, text="", justify="center",font=("Arial, 35"))
         self.statusLabel.place(relx=0.15,rely=0.1)
         
         self.loadQuestions()

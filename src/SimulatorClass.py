@@ -9,7 +9,7 @@ class VisualCircuitSimulator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.CircuitName = ["Klasický vypínač","Schodišťový vypínač","Prúd","RLC grafy","Transformátor"]
+        self.CircuitName = ["Klasický vypínač","Schodišťový vypínač","Prúd","RLC grafy","Transformátor", "Napäťový delič"]
         
         screenWidth = root.winfo_screenwidth()
         screenHeight = root.winfo_screenheight()
@@ -48,6 +48,7 @@ class VisualCircuitSimulator:
             scrollCanvas.yview_scroll(-1 * int(event.delta / 120), "units")
 
         scrollCanvas.bind_all("<MouseWheel>", on_mousewheel)
+        
 #-------------------------------------------------------------------------------------
         for circuitName in self.CircuitName:
             button = tk.Button(
@@ -79,7 +80,9 @@ class VisualCircuitSimulator:
         elif circuit == "RLC grafy":
             self.drawCircuit4() 
         elif circuit == "Transformátor":
-            self.drawCircuit5()        
+            self.drawCircuit5() 
+        elif circuit == "Napäťový delič":
+            self.drawCircuit6()        
            
 #-------------------------------------------------------------------------------------
     def drawCircuit1(self):
@@ -340,10 +343,9 @@ class VisualCircuitSimulator:
 
            
             
-            
-            
             # Aktualizácia grafu
             ax.clear()
+            ax.grid()
             if self.I_state.get() == 1:
                 ax.plot(t, i_t, label="Prúd (A)")
             if self.R_state.get() == 1:
@@ -381,7 +383,7 @@ class VisualCircuitSimulator:
         controlsFrame.place(relx=0.2,rely=0.7,relwidth=0.8,relheight=0.28)
         
         self.I_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.I_state)
-        self.I_check.place(relx=0.13,rely=0.85, relwidth=0.05,relheight=0.05)
+        self.I_check.place(relx=0.13,rely=0.9, relwidth=0.05,relheight=0.05)
         self.R_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.R_state)
         self.R_check.place(relx=0.13,rely=0.1, relwidth=0.05,relheight=0.05)
         self.L_check = tk.Checkbutton(controlsFrame,bg="white",  variable=self.L_state)
@@ -442,10 +444,11 @@ class VisualCircuitSimulator:
 
             # Aktualizácia grafu
             ax.clear()
+            ax.grid()
             ax.bar(["Primárne napätie", "Sekundárne napätie"], [U1, U2], color="blue", alpha=0.7, label="Napätie (V)")
             ax.bar(["Primárny prúd", "Sekundárny prúd"], [I1, I2], color="green", alpha=0.7, label="Prúd (A)")
             ax.legend()
-            ax.set_title("Transformátor: Napätie a prúd")
+            ax.set_title("Ideálny transformátor: Napätie a prúd")
             canvas.draw()
 
             # Aktualizácia textu výkonu a ďalších informácií
@@ -509,3 +512,91 @@ class VisualCircuitSimulator:
 
         updateCircuit()
 #----------------------------------------------------------------------------------------------------------------------        
+    def drawCircuit6(self):
+        scale = int(self.Cw * 0.12)
+        # Počiatočné hodnoty
+        vin = 12
+        R1 = 10 
+        R2 = 20 
+        Vout = 0
+
+        # Funkcia na výpočet napäťového deliča a aktualizáciu zobrazenia
+        def calculateDivider():
+            nonlocal Vout, vin, R1, R2
+            try:
+                vin = float(vinEntry.get())
+                R1 = float(R1Entry.get())
+                R2 = float(R2Entry.get())
+                Vout = vin * R2 / (R1 + R2)
+                
+                # Aktualizácia textov priamo na canvas-e:
+                self.canvas.itemconfig(vinText, text=f"Vin = {vin:.2f} V")
+                self.canvas.itemconfig(R1Text, text=f"R1 = {R1:.2f} Ω")
+                self.canvas.itemconfig(R2Text, text=f"R2 = {R2:.2f} Ω")
+                self.canvas.itemconfig(VoutText, text=f"Vout = {Vout:.2f} V")
+            except Exception as e:
+                pass
+
+        
+
+       
+        self.canvas.create_line(50*scale, 160*scale, 50*scale, 300*scale, width=3)  # Vertikálny vodič zdroja
+        self.canvas.create_line(30*scale, 250*scale, 70*scale, 250*scale, width=3)  # Horný vodič zdroja
+        self.canvas.create_line(40*scale, 260*scale, 60*scale, 260*scale, width=3)  # Spodný vodič zdroja
+
+        positiveLabel = tk.Label(self.canvas, text="+", font=self.fontSize, bg="white", fg="red")
+        positiveLabel.place(x=40, y=450)
+
+        negativeLabel = tk.Label(self.canvas, text="-", font=self.fontSize, bg="white", fg="black")
+        negativeLabel.place(x=40, y=550)
+
+        # Paralelné rezistory
+        self.canvas.create_line(50*scale, 160*scale, 300*scale, 160*scale, width=3)  # Vodič k uzlu rezistorov
+        resistor1 = self.canvas.create_rectangle(290*scale, 230*scale, 310*scale, 270*scale, outline="black", fill="white")
+        resistor2 = self.canvas.create_rectangle(290*scale, 170*scale, 310*scale, 210*scale, outline="black", fill="white")
+        pin1 = self.canvas.create_oval(400*scale, 215*scale, 410*scale, 225*scale, outline="black", fill="white")
+        pin2 = self.canvas.create_oval(400*scale, 295*scale, 410*scale, 305*scale, outline="black", fill="white")
+        voltageArrowIn = self.canvas.create_line(80*scale, 230*scale, 80*scale, 270*scale, arrow=tk.LAST, fill="green", width=4)
+        voltageArrowOut = self.canvas.create_line(405*scale, 230*scale, 405*scale, 290*scale, arrow=tk.LAST, fill="green", width=4)
+        
+        self.canvas.create_line(300*scale, 220*scale, 400*scale, 220*scale, width=3)  # Vodič od prvého rezistora
+        self.canvas.create_line(300*scale, 300*scale, 400*scale, 300*scale, width=3)  # Vodič od druhého rezistora
+        
+        self.canvas.create_line(300*scale, 160*scale, 300*scale, 170*scale, width=3)  # Vertikálny vodič medzi rezistormi
+        self.canvas.create_line(300*scale, 210*scale, 300*scale, 230*scale, width=3)  # Vertikálny vodič medzi rezistormi
+        self.canvas.create_line(300*scale, 270*scale, 300*scale, 300*scale, width=3)  # Vertikálny vodič medzi rezistormi
+        
+        # Návratová cesta
+        self.canvas.create_line(350*scale, 300*scale, 50*scale, 300*scale, width=3)  # Spodný vodič k zdroj 
+    
+       
+        R1Text = self.canvas.create_text(355*scale, 190*scale, text=f"R1 = {R1:.2f} Ω", font=self.fontSize)    
+        R2Text = self.canvas.create_text(355*scale, 250*scale, text=f"R2 = {R2:.2f} Ω", font=self.fontSize)
+        VoutText = self.canvas.create_text(470*scale, 260*scale, text=f"Vout = {Vout:.2f} V", font=self.fontSize, fill="blue")
+        vinText = self.canvas.create_text(140*scale, 250*scale, text=f"Vin = {vin:.2f} V", font=self.fontSize, fill="green")
+
+        # Entry widgety pre zadávanie hodnôt (umiestnené priamo na canvas-e)
+        vinLabel = tk.Label(self.canvas, text="Vin (V):", font=self.fontSize, bg="white")
+        vinLabel.place(x=50*scale, y=320*scale)
+        vinEntry = tk.Entry(self.canvas, font=self.fontSize)
+        vinEntry.insert(0, str(vin))
+        vinEntry.place(x=150*scale, y=320*scale)
+
+        R1Label = tk.Label(self.canvas, text="R1 (Ω):", font=self.fontSize, bg="white")
+        R1Label.place(x=50*scale, y=360*scale)
+        R1Entry = tk.Entry(self.canvas, font=self.fontSize)
+        R1Entry.insert(0, str(R1))
+        R1Entry.place(x=150*scale, y=360*scale)
+
+        R2Label = tk.Label(self.canvas, text="R2 (Ω):", font=self.fontSize, bg="white")
+        R2Label.place(x=50*scale, y=400*scale)
+        R2Entry = tk.Entry(self.canvas, font=self.fontSize)
+        R2Entry.insert(0, str(R2))
+        R2Entry.place(x=150*scale, y=400*scale)
+
+        # Tlačidlo na výpočet
+        calcButton = tk.Button(self.canvas, text="Vypočítaj Vout", font=self.fontSize, command=calculateDivider)
+        calcButton.place(x=350*scale, y=320*scale)
+
+        # Počiatočný výpočet
+        calculateDivider()

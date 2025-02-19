@@ -9,3 +9,30 @@ Aká je bezpečná hodnota napätia pre AC?;Maximálne 50 V;Maximálne 60 V;Maxi
 Čo hovorí Kirchhoffov zákon prúdu?;Súčet prúdov do uzla je rovný súčtu prúdov z uzla;Súčet napätí v obvode je rovný nule;Súčet odporov v sériovom zapojení je rovný súčtu ich hodnôt;Prúd v paralelnom obvode je rovnaký vo všetkých vetvách
 Čo hovorí Kirchhoffov zákon napätia?;Súčet napätí v uzavretom obvode je rovný nule;Súčet prúdov do uzla je rovný súčtu prúdov z uzla;Súčet odporov v paralelnom zapojení je rovný ich priemeru;Napätie je rovnaké vo všetkých vetvách obvodu
 Aký materiál má najlepšiu elektrickú vodivosť?;Striebro;Meď;Hliník;Zlato
+Čo je výkon v elektrických obvodoch?;Súčin napätia a prúdu;Odpor voči prúdu;Kapacita elektrického obvodu;Počet závitov v cievke
+Aká je jednotka elektrického výkonu?;Watt (W);Volt (V);Ohm (Ω);Coulomb (C)
+Čo sa stane, ak v obvode zvýšime prúd aj napätie?;Výkon sa zvýši;Výkon sa zníži;Výkon zostane rovnaký;Výkon zmizne
+Čo meria impedancia?;Celkový odpor v striedavom obvode;Iba odpor v jednosmernom obvode;Výkon elektrického obvodu;Napätie na rezistore
+Čo spôsobuje reaktancia v obvode?;Závisí od frekvencie a bráni prúdu;Znižuje napätie na batérii;Produkuje teplo ako rezistor;Ukladá elektrický náboj
+Ktoré komponenty v obvode spôsobujú reaktanciu?;Cievky a kondenzátory;Iba rezistory;Iba diódy;Batérie a spínače
+Aká je jednotka frekvencie?;Hertz (Hz);Watt (W);Ampér (A);Ohm (Ω)
+Aký vzťah má frekvencia k fázovému posunu?;Vyššia frekvencia môže spôsobiť väčší fázový posun;Fázový posun je nezávislý od frekvencie;Nižšia frekvencia vždy zruší fázový posun;Frekvencia a fázový posun sú vždy rovnaké
+Čo sa stane s fázovým posunom v RL obvode?;Napätie predchádza prúdu;Prúd predchádza napätiu;Napätie a prúd sú vždy v súlade;Fázový posun neexistuje
+Čo opisuje Coulombov zákon?;Sila medzi elektricky nabitými telesami;Magnetické pole okolo vodiča;Správanie sa tranzistora;Princíp činnosti diód
+Aké častice sú predmetom Coulombovho zákona?;Elektróny a protóny;Neutrína;Atómy;Neutróny
+Ako sa mení sila medzi dvoma elektricky nabitými telesami pri zväčšení vzdialenosti?;Slabne;Zosilňuje sa;Zostáva rovnaká;Nezávisí od vzdialenosti
+Na akom princípe funguje elektromagnetická indukcia?;Zmena magnetického poľa vyvolá elektrické napätie;Priamy prechod prúdu medzi dvoma vodičmi;Elektromagnetická vlna prenáša prúd;Nabité častice sa hýbu priamočiare
+Ktorý vedec objavil elektromagnetickú indukciu?;Michael Faraday;Nikola Tesla;Thomas Edison;James Clerk Maxwell
+Čo je základom činnosti generátora?;Elektromagnetická indukcia;Mechanické trenie;Odpor vodičov;Gravitačná sila
+Aká je hlavná úloha rezistora?;Obmedzuje prúd v obvode;Zosilňuje elektrický signál;Premieňa elektrickú energiu na svetlo;Funguje ako spínač
+Aký fyzikálny jav nastáva v rezistore?;Premena elektrickej energie na teplo;Ukladanie elektrického náboja;Generovanie magnetického poľa;Zosilnenie signálu
+Aká je základná funkcia kondenzátora?;Ukladá elektrický náboj;Obmedzuje prúd;Premieňa jednosmerný prúd na striedavý;Zvýrazňuje magnetické pole
+Čo sa stane, keď sa kondenzátor úplne nabije?;Prúd cez neho prestane tiecť;Začne sa správať ako rezistor;Bude neustále odoberať prúd;Jeho kapacita sa zvýši
+Na čo slúži cievka v elektrickom obvode?;Indukuje napätie a uskladňuje energiu v magnetickom poli;Usmerňuje elektrický prúd;Zvyšuje kapacitu kondenzátora;Produkuje jednosmerný prúd
+Ako ovplyvní feromagnetické jadro cievky jej vlastnosti?;Zvýši indukčnosť;Zníži impedanciu;Obmedzí napätie;Odstráni magnetické pole
+Ako funguje tranzistor?;Reguluje prúd alebo napätie v obvode;Premieňa jednosmerné napätie na striedavé;Ukladá elektrický náboj ako kondenzátor;Používa sa iba na výrobu svetla
+Aký typ tranzistora sa často používa v zosilňovačoch?;Bipolárny (BJT);LED dióda;Varistor;Fotorezistor
+Aká je hlavná funkcia diódy?;Prepúšťa prúd len v jednom smere;Zvyšuje napätie v obvode;Ukladá elektrickú energiu;Riadi výkon motora
+Aký je špeciálny typ diódy, ktorý vyžaruje svetlo?;LED dióda;Zenerova dióda;Usmerňovacia dióda;Varistor
+Ako funguje transformátor?;Mení napätie v striedavom prúde pomocou elektromagnetickej indukcie;Premieňa jednosmerný prúd na striedavý;Ukladá elektrický náboj;Zosilňuje signál v rádiovom obvode
+Aké sú dve hlavné časti transformátora?;Primárne a sekundárne vinutie;Katóda a anóda;Emitor a kolektor;Rotor a stator
