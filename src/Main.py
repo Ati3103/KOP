@@ -1,5 +1,8 @@
 import tkinter as tk
 import tkinter.font as tkFont
+import os
+import sys
+from PIL import Image, ImageTk
 from TeoriaClass import Teoria
 from CalculatorClass import Calculator
 from SimulatorClass import VisualCircuitSimulator
@@ -7,15 +10,26 @@ from QuizClass import Quiz
 #---------------------------------------------------
 root = tk.Tk()
 root.attributes("-fullscreen", True)
-image = tk.PhotoImage(file="background.png")
 #---------------------------------------------------
 screenWidth = root.winfo_screenwidth() 
 screenHeight = root.winfo_screenheight()
 baseFontSize = int(min(screenWidth, screenHeight) * 0.03)
 fontSize = tkFont.Font(family="Arial", size=baseFontSize)
 #----------------------------------------------------------------------------------------------
-bgLabel = tk.Label(root, width=screenWidth, height=screenHeight, image=image)
-bgLabel.pack()
+if getattr(sys, 'frozen', False):
+    basePath = sys._MEIPASS
+else:
+    basePath = os.path.abspath(".")
+
+backgroundPath = os.path.join(basePath, "background.png")
+
+backgroundImage = Image.open(backgroundPath)
+backgroundImage = backgroundImage.resize((screenWidth, screenHeight), Image.Resampling.LANCZOS)
+backgroundPhoto = ImageTk.PhotoImage(backgroundImage)
+
+
+backgroundLabel = tk.Label(root, image=backgroundPhoto)
+backgroundLabel.place(x=0, y=0, relwidth=1, relheight=1)
 #----------------------------------------------------------------------------------------------------------------------------------------  
 headerLabel = tk.Label(root, width=screenWidth,bd=5, relief="solid", bg="lightblue")
 headerLabel.place(x=0, y=0,relheight=0.068)

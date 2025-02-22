@@ -1,7 +1,8 @@
 import tkinter as tk
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
-
+import sys
+import os
 
 class Teoria:
     def __init__(self, root, clearFunction,removeButtonsFunction, openTabs, openButtons, removeButtons):
@@ -152,8 +153,17 @@ class Teoria:
             self.ButtonList.append(self.nextButton)
 
        
+        def resource_path(relative_path):
+            try:
+                
+                base_path = sys._MEIPASS
+            except Exception:
+                base_path = os.path.abspath(".")
+            return os.path.join(base_path, relative_path)
+
+        
         try:
-            imagePath = Image.open(f"Teoria/{themeToLoad}.png")
+            imagePath = Image.open(resource_path(f"Teoria/{themeToLoad}.png"))
             resizedImage = imagePath.resize((self.ImageW, self.ImageH))
             tkImage = ImageTk.PhotoImage(resizedImage)
             imgLabel = tk.Label(self.root, image=tkImage, relief="solid")
@@ -163,10 +173,10 @@ class Teoria:
         except (FileNotFoundError, ValueError):
             print("No second page found.")
 
-       
+        
         try:
             try:
-                gifPath = Image.open(f"GIF/{themeToLoad}.gif")
+                gifPath = Image.open(resource_path(f"GIF/{themeToLoad}.gif"))
                 frames = [
                     ImageTk.PhotoImage(gifPath.copy().resize((self.GifW, self.GifH)))
                     for frame in range(gifPath.n_frames)
@@ -185,7 +195,7 @@ class Teoria:
                         self.root.after(100, updateFrame)
                 updateFrame()
             except Exception:
-                imagePath = Image.open(f"GIF/{themeToLoad}.png")
+                imagePath = Image.open(resource_path(f"GIF/{themeToLoad}.png"))
                 resizedImage = imagePath.resize((self.GifW, self.GifH))
                 tkImage = ImageTk.PhotoImage(resizedImage)
                 imgLabel = tk.Label(self.root, image=tkImage, relief="solid")
