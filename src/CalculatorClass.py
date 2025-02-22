@@ -26,32 +26,32 @@ class Calculator:
         self.Cw = int(screenWidth/100)
         self.Ch = int(screenHeight/100)
 #-------------------------------------------------------------------------------------
-        # Panel na tlačidlá s témami
+        
         panelFrame = tk.Frame(self.root, relief="groove", bd=5, bg="blue")
         panelFrame.place(x=0, rely=0.1, relwidth=0.2, relheight=0.9)  
 
-        # Canvas pre skrolovateľnú oblasť
+      
         scrollCanvas = tk.Canvas(panelFrame, bg="blue", highlightthickness=0)
         scrollCanvas.pack(side="left", fill="both", expand=True)
 
-        # Scrollbar
+       
         scrollbar = tk.Scrollbar(panelFrame, orient="vertical", command=scrollCanvas.yview)
         scrollbar.pack(side="right", fill="y")
 
-        # Kontejner na tlačidlá vo vnútri Canvas
+       
         self.buttonContainer = tk.Frame(scrollCanvas, bg="blue")
         scrollCanvas.create_window((0, 0), window=self.buttonContainer, anchor="nw")
 
-        # Synchronizácia skrolovania
+       
         scrollCanvas.configure(yscrollcommand=scrollbar.set)
 
-        # Dynamická aktualizácia skrolovacej oblasti
+        
         def update_scrollregion(event):
             scrollCanvas.configure(scrollregion=scrollCanvas.bbox("all"))
 
         self.buttonContainer.bind("<Configure>", update_scrollregion)
 
-        # Skrolovanie pomocou kolieska myši
+       
         def on_mousewheel(event):
             scrollCanvas.yview_scroll(-1 * int(event.delta / 120), "units")
 
@@ -66,7 +66,6 @@ class Calculator:
         for Formula in self.OperationName:
             button = tk.Button(
                 self.buttonContainer,
-                width=int(self.Cw * 1.2),
                 text=f"{Formula}",
                 relief="groove",
                 bd=1,
@@ -75,7 +74,7 @@ class Calculator:
                 font=self.fontSize,
                 command=lambda Formula=Formula: self.buttonAction(Formula)  
             )
-            button.pack(pady=5, padx=3, anchor="w")
+            button.pack(pady=5, padx=3, anchor="w", fill="x")
 #-------------------------------------------------------------------------------------
         
         
@@ -127,11 +126,11 @@ class Calculator:
         self.OpenList.append(frame)
         
       
-        self.entryR = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryR = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
         self.entryR.place(relx=0.25,rely=0.01)
-        self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
         self.entryU.place(relx=0.25,rely=0.08)
-        self.entryI = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryI = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
         self.entryI.place(relx=0.25,rely=0.15)
         
         self.label1 = tk.Label(frame,text="R [Ω]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
@@ -200,11 +199,11 @@ class Calculator:
             frame.place(relx=0.3,rely=0.2,relwidth=0.5,relheight=0.8)
             self.OpenList.append(frame)
         
-            self.entryR = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryR = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entryR.place(relx=0.25,rely=0.01)
-            self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entryU.place(relx=0.25,rely=0.08)
-            self.entryI = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryI = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entryI.place(relx=0.25,rely=0.15)
             
             self.label1 = tk.Label(frame,text="P [W]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
@@ -391,13 +390,13 @@ class Calculator:
             frame.place(relx=0.3,rely=0.2,relwidth=0.5,relheight=0.8)
             self.OpenList.append(frame)
            
-            self.entryN = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryN = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entryN.place(relx=0.25,rely=0.01)
-            self.entry1 = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entry1 = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entry1.place(relx=0.25,rely=0.08)
-            self.entry2 = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entry2 = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entry2.place(relx=0.25,rely=0.15)
-            self.entryμr = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+            self.entryμr = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
             self.entryμr.place(relx=0.25, rely=0.22)
             
             self.labelN = tk.Label(frame,text="N [z]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")
@@ -478,11 +477,11 @@ class Calculator:
         frame.place(relx=0.3,rely=0.2,relwidth=0.5,relheight=0.8)
         self.OpenList.append(frame)
       
-        self.entryC = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryC = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
         self.entryC.place(relx=0.25,rely=0.01)
-        self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryU = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
         self.entryU.place(relx=0.25,rely=0.08)
-        self.entryQ = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4")
+        self.entryQ = tk.Entry(frame,font=self.valueFontSize,bg="DeepSkyBlue4", fg="white")
         self.entryQ.place(relx=0.25,rely=0.15)
         
         self.label2 = tk.Label(frame,text="C [F]",font=self.valueFontSize,bg="DeepSkyBlue4",fg="white")

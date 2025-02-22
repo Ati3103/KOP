@@ -17,7 +17,7 @@ fontSize = tkFont.Font(family="Arial", size=baseFontSize)
 bgLabel = tk.Label(root, width=screenWidth, height=screenHeight, image=image)
 bgLabel.pack()
 #----------------------------------------------------------------------------------------------------------------------------------------  
-headerLabel = tk.Label(root, width=screenWidth,bd=5, relief="solid", bg="gold")
+headerLabel = tk.Label(root, width=screenWidth,bd=5, relief="solid", bg="lightblue")
 headerLabel.place(x=0, y=0,relheight=0.068)
 #----------------------------------------------------------------------------------------------------------------------------------------
 closeButton = tk.Button(root, text="X", font=fontSize, fg="white", bg="red",bd=5, relief="solid",  command=root.destroy)
