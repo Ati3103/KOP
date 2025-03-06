@@ -9,7 +9,7 @@ class VisualCircuitSimulator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.CircuitName = ["Klasický vypínač","Schodišťový vypínač","Prúd","RLC grafy","Transformátor", "Napäťový delič"]
+        self.CircuitName = ["Klasický vypínač","Schodišťový vypínač           ","Prúd","RLC grafy","Transformátor", "Napäťový delič"]
         
         screenWidth = root.winfo_screenwidth()
         screenHeight = root.winfo_screenheight()

@@ -14,7 +14,7 @@ class Calculator:
         self.root = root
         self.ClearFunction = clearFunction
         self.OpenList = openTabs
-        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky", "Sériovo zapojené: R/C", "Paralelne zapojené: R/C", ]
+        self.OperationName = ["Ohmov zákon","Výkon","Odpor vodiča","Kapacita","Indukčnosť Cievky", "Sériovo zapojené: R/C", "Paralelne zapojené: R/C     ", ]
         
         
         screenWidth = root.winfo_screenwidth()
